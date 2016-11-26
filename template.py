@@ -15,6 +15,7 @@ def openimage(filename):
     # ...
     # ...
     # return image
+    
     img = Image.open(filename)
     if img.format == 'PNG':
         return img
@@ -27,6 +28,7 @@ def saveimage(image,name):
     """
     # TODO ...
     # ...
+    
     image.save('name.png')
 
 # -----------------------------------------------
@@ -35,6 +37,7 @@ def showimage(image):
     """ Show the image on the screen.
     """
     # TODO
+    
     image.show()
 
 # ------------------------------------------------
@@ -46,12 +49,18 @@ def getLSB(byte):
     """ return the least significant bit of the argument
     """
     # TODO
+    
+    lsb = byte & 1
+    return lsb
 
 def setLSB(byte, bit):
     """ return byte modified such that the least significant
         bit has the value given by bit.
     """
     # TODO
+    
+    new_byte = (byte & ~1) | bit
+    return new_byte
 
 def messagetobitlist(message):
     """ Convert each letter in the message first into
