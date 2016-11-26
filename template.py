@@ -1,4 +1,4 @@
-import Image
+from PIL import Image
 import re
 
 # file access
@@ -15,13 +15,13 @@ def openimage(filename):
     # ...
     # ...
     # return image
-    
-    img = Image.open('filename.png')
-    if img.format() == 'PNG':
-        return img
-    else:
-        print 'Please select a valid image.'
-        return
+    img = Image.open(filename)
+#     if img.format() == 'PNG':
+#         return img
+#     else:
+#         print 'Please select a valid image.'
+#         return
+    return img
 
 def saveimage(image,name):
     """ Save the modified image under the specified name.

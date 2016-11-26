@@ -7,16 +7,17 @@ import tkFileDialog
 # file. 
 
 # change this if you renamed the template
-try:
-    import template as sl
-except:
-    pass
+# try:
+#     import template as sl
+# except:
+#     pass
+# 
+# try:
+#     import solution as sl
+# except:
+#     pass
 
-try:
-    import solution as sl
-except:
-    pass
-
+import template as sl
 
 class MyFrame(Frame):
     def __init__(self):
