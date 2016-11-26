@@ -21,7 +21,7 @@ def openimage(filename):
         return img
     else:
         print 'Please select a valid image.'
-        return None
+        return
 
 def saveimage(image,name):
     """ Save the modified image under the specified name.
@@ -76,6 +76,10 @@ def messagetobitlist(message):
         
     """
     # TODO
+    
+    for i in message:
+        for x in (format(ord(i), 'b')):
+            bitlist.append(int(x))
     return bitlist
 
 def bitlisttobyte(bits):
