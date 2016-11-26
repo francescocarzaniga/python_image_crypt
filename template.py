@@ -16,18 +16,18 @@ def openimage(filename):
     # ...
     # return image
     img = Image.open(filename)
-#     if img.format() == 'PNG':
-#         return img
-#     else:
-#         print 'Please select a valid image.'
-#         return
-    return img
+    if img.format == 'PNG':
+        return img
+    else:
+        print 'Please select a valid image.'
+        return None
 
 def saveimage(image,name):
     """ Save the modified image under the specified name.
     """
     # TODO ...
     # ...
+    image.save('name.png')
 
 # -----------------------------------------------
 
@@ -35,6 +35,7 @@ def showimage(image):
     """ Show the image on the screen.
     """
     # TODO
+    image.show()
 
 # ------------------------------------------------
 
