@@ -1,0 +1,256 @@
+import Image
+import re
+
+# file access
+# ---------------------------------------------------
+
+def openimage(filename):
+    """ Open the image given by the filename specified in the
+    filename string and return the image object.
+    """
+    # TODO: call the correct function from the Image module
+    #  img = Image. ...
+    # TODO: make sure the image format is PNG (only lossless
+    #  images are supported)
+    # ...
+    # ...
+    # return image
+
+def saveimage(image,name):
+    """ Save the modified image under the specified name.
+    """
+    # TODO ...
+    # ...
+
+# -----------------------------------------------
+
+def showimage(image):
+    """ Show the image on the screen.
+    """
+    # TODO
+
+# ------------------------------------------------
+
+# binary data functions
+# ------------------------------------------------
+
+def getLSB(byte):
+    """ return the least significant bit of the argument
+    """
+    # TODO
+
+def setLSB(byte, bit):
+    """ return byte modified such that the least significant
+        bit has the value given by bit.
+    """
+    # TODO
+
+def messagetobitlist(message):
+    """ Convert each letter in the message first into
+        the character code using the ord(c) function.
+        Then return a list containing each bit of the resulting 8-bit numbers
+        starting from the most significant bit and ending at the lsb.
+
+        Example:
+
+        >>> msg = messagetobitlist("AB")
+        >>> msg
+        [0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0]
+        
+    """
+    # TODO
+    return bitlist
+
+def bitlisttobyte(bits):
+    """ Convert a list of length 8, containing
+        the bits of a byte in order from MSB to LSB
+        into a byte.
+
+        Example:
+        >>> bitlisttobyte([0,1,0,1,0,0,0,1])
+        81
+        
+    """
+    byte = 0
+    # TODO: convert 8 bits into a byte ....
+    # ...
+    # ...
+    return byte
+
+def bytetobitlist(byte):
+    """ convert a byte into a list of bits
+        Example:
+
+        >>> bytetobitlist(4)
+        [0,0,0,0,0,1,0,0]
+        
+    """
+    # TODO
+
+def bitlisttostring(bitlist):
+    """ The input is a list containing
+        the bits of a message. Take 8 bit pieces
+        and convert them to characters. Return the resulting
+        string.
+    """
+
+    string = None
+    
+    for i in range(0, len(bitlist), 8):
+        bl = bitlist[i:i+8]
+        if len(bl) < 8:
+            break
+        # bl is a list of length 8
+        # containing the bits of a byte
+        # in order from the msb to the lsb
+        
+        byte = bitlisttobyte(bl)
+        c = chr(byte) #get character from bytecode
+        string += c
+        
+    return string
+
+def isprintable(string):
+    """ Check if a string consists only of printable characters.
+    """
+    from string import printable
+    return all(c in printable for c in string)
+
+def addmagicstring(message):
+    """ Adds some special string at the beginning and end of
+        the message so it can be recognised by the programm later.
+
+        For example:
+        >>> addmagicstring('Hello')
+        'MAGICSTRINGSTARTHelloMAGICSTRINGEND'
+    """
+
+    #TODO ...
+    return message
+
+def checkmagic(string):
+    """ Check if the string contains a magic string marker.
+        If it does, then return the message in between.
+    """
+    
+    # TODO
+    # Set to the same string you choose in the function above
+    MAGICSTART = ""
+    MAGICEND   = ""
+
+    result = re.search(MAGICSTART + '([\s\S.]*)' + MAGICEND, string)
+    if result:
+        return result.group(1)
+    else:
+        return None
+    
+def writelsbtoimage(image, bl):
+    """ Change each LSB in each color component of each pixel
+        in the image with the binary representation of the message.
+    """
+    i = 0
+    px = image.load()
+
+    #TODO: why is this function written like this?
+    #      can you improve it?
+
+    for x in range(image.size[0]):
+        for y in range(image.size[1]):
+            # stop modifying if we reach end of message
+            if i >= len(bl):
+                break
+
+            r,g,b = px[x,y]
+
+            r = setLSB(r,bl[i])
+            i+=1
+            
+            if i < len(bl):
+                g = setLSB(g,bl[i])
+                i+=1    
+            
+
+            if i < len(bl):
+                b = setLSB(b,bl[i])
+                i+=1
+
+            # store the modification
+            px[x,y] = r,g,b
+
+def getlsbfromimage(image):
+    """ Return the least significant bits in the image
+        as a list
+    """
+
+    px = image.load()
+
+    l = []
+    
+    for x in range(image.size[0]):
+        for y in range(image.size[1]):
+
+            #TODO: for each pixel in the image extract the three colors
+            #      red, green and blue
+            # ...
+            
+            bit = getLSB(red)
+            # TODO ...
+            bit = getLSB(green)
+            # TODO ...
+            bit = getLSB(blue)
+            # TODO ...
+    return l
+
+    
+def embed(message, image):
+    """ Embed the string in the image as a secret message.
+    """
+    # add some string at the beginning and end of the message
+    # such that it is later possible to identify if a message
+    # has been hidden.
+    message = addmagicstring(message)
+    
+    # Convert the message into a list of bits
+    bl = messagetobitlist(message)
+
+    writelsbtoimage(image,bl)
+
+def extract(image):
+    """ check if the given image contains any hidden message
+        and return the message as a string if there is any.
+    """
+    bits = getlsbfromimage(image)
+    string = bitlisttostring(bits)
+    if checkmagic(string) == None:
+        print("Nothing found")
+    return string
+
+
+# Testing functions
+#------------------------------------------------------------------
+import unittest
+
+class TEST(unittest.TestCase):
+
+    # 1. check if embedding and extraction of messages works
+    def test_embedextract(self):
+        """ Test if we can open an image, embed a string in it,
+            and then save it under a new file name.
+        """
+        import string
+        import random
+        string = ''.join(random.choice(string.letters) for _ in range(10))
+        img = openimage('face.png')
+        embed(string, img)
+        img.save('TEST2.png')
+        img = openimage('TEST2.png')
+        m = extract(img)
+        self.assertEqual(string, m)
+
+def main():
+    unittest.main()
+
+if __name__ == "__main__":
+    main()
+
+
