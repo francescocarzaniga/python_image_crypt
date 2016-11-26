@@ -15,6 +15,13 @@ def openimage(filename):
     # ...
     # ...
     # return image
+    
+    img = Image.open('filename.png')
+    if img.format() == 'PNG':
+        return img
+    else:
+        print 'Please select a valid image.'
+        return
 
 def saveimage(image,name):
     """ Save the modified image under the specified name.
