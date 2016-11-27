@@ -76,6 +76,7 @@ def messagetobitlist(message):
         
     """
     # TODO
+    bitlist = []
     
     for i in message:
         for x in (format(ord(i), 'b')):
@@ -169,6 +170,16 @@ def writelsbtoimage(image, bl):
     """ Change each LSB in each color component of each pixel
         in the image with the binary representation of the message.
     """
+    
+    #New method
+    import numpy as np
+    
+    img_array = np.array(image)
+    img_array.ravel()[:len(bl)] = setLSB(img_array.ravel()[:len(bl)], bl)
+    image_output = Image.fromarray(img_array)
+    
+    return image_output
+    #Old method
     i = 0
     px = image.load()
 
