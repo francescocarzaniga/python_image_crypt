@@ -174,6 +174,7 @@ def writelsbtoimage(image, bl):
     #New method
     import numpy as np
     
+    image = image.load()
     img_array = np.array(image)
     img_array.ravel()[:len(bl)] = setLSB(img_array.ravel()[:len(bl)], bl)
     image_output = Image.fromarray(img_array)
@@ -213,7 +214,16 @@ def getlsbfromimage(image):
     """ Return the least significant bits in the image
         as a list
     """
+    
+    #New method
+    import numpy as np
+    
+    image = image.load()
+    lsblist = getLSB(img_array.ravel()).tolist()
+    
+    return lsblist
 
+    #Old method
     px = image.load()
 
     l = []
