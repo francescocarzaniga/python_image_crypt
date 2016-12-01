@@ -174,40 +174,41 @@ def writelsbtoimage(image, bl):
     #New method
     import numpy as np
     
+    image = image.load()
     img_array = np.array(image)
     img_array.ravel()[:len(bl)] = setLSB(img_array.ravel()[:len(bl)], bl)
     image_output = Image.fromarray(img_array)
     
     return image_output
     #Old method
-    i = 0
-    px = image.load()
-
-    #TODO: why is this function written like this?
-    #      can you improve it?
-
-    for x in range(image.size[0]):
-        for y in range(image.size[1]):
-            # stop modifying if we reach end of message
-            if i >= len(bl):
-                break
-
-            r,g,b = px[x,y]
-
-            r = setLSB(r,bl[i])
-            i+=1
-            
-            if i < len(bl):
-                g = setLSB(g,bl[i])
-                i+=1    
-            
-
-            if i < len(bl):
-                b = setLSB(b,bl[i])
-                i+=1
-
-            # store the modification
-            px[x,y] = r,g,b
+#     i = 0
+#     px = image.load()
+# 
+#     #TODO: why is this function written like this?
+#     #      can you improve it?
+# 
+#     for x in range(image.size[0]):
+#         for y in range(image.size[1]):
+#             # stop modifying if we reach end of message
+#             if i >= len(bl):
+#                 break
+# 
+#             r,g,b = px[x,y]
+# 
+#             r = setLSB(r,bl[i])
+#             i+=1
+#             
+#             if i < len(bl):
+#                 g = setLSB(g,bl[i])
+#                 i+=1    
+#             
+# 
+#             if i < len(bl):
+#                 b = setLSB(b,bl[i])
+#                 i+=1
+# 
+#             # store the modification
+#             px[x,y] = r,g,b
 
 def getlsbfromimage(image):
     """ Return the least significant bits in the image
@@ -217,29 +218,31 @@ def getlsbfromimage(image):
     #New method
     import numpy as np
     
+    image = image.load()
+    img_array = np.array(image)
     lsblist = getLSB(img_array.ravel()).tolist()
     
     return lsblist
 
     #Old method
-    px = image.load()
-
-    l = []
-    
-    for x in range(image.size[0]):
-        for y in range(image.size[1]):
-
-            #TODO: for each pixel in the image extract the three colors
-            #      red, green and blue
-            # ...
-            
-            bit = getLSB(red)
-            # TODO ...
-            bit = getLSB(green)
-            # TODO ...
-            bit = getLSB(blue)
-            # TODO ...
-    return l
+#     px = image.load()
+# 
+#     l = []
+#     
+#     for x in range(image.size[0]):
+#         for y in range(image.size[1]):
+# 
+#             #TODO: for each pixel in the image extract the three colors
+#             #      red, green and blue
+#             # ...
+#             
+#             bit = getLSB(red)
+#             # TODO ...
+#             bit = getLSB(green)
+#             # TODO ...
+#             bit = getLSB(blue)
+#             # TODO ...
+#     return l
 
     
 def embed(message, image):
