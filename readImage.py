@@ -2,7 +2,7 @@
 This program needs the packages PIL and pillow to be loaded
 MAC Users with terminal (just copy-paste in sequence): 
 sudo easy_install pip
-pip install pillow
+sudo pip install pillow
 '''
 import sys
 import os
