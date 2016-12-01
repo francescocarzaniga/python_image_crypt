@@ -6,7 +6,7 @@ import re
 
 def openimage(filename):
     """ Open the image given by the filename specified in the
-    filename string and return the image object.
+    filename string and return the image object:
     """
     # TODO: call the correct function from the Image module
     #  img = Image. ...
