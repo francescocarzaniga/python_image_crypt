@@ -93,10 +93,10 @@ def bitlisttobyte(bits):
         81
         
     """
-    byte = 0
-    # TODO: convert 8 bits into a byte ....
-    # ...
-    # ...
+    i = len(bits)
+    byte = 0 
+    for k in range (0,i):
+        byte = byte + 2**k*bits[i-1-k]         
     return byte
 
 def bytetobitlist(byte):
@@ -107,7 +107,14 @@ def bytetobitlist(byte):
         [0,0,0,0,0,1,0,0]
         
     """
-    # TODO
+    byte = bin(byte)[2:]
+    str(byte)
+    bits = []
+    for i in byte: 
+        bits.append(i)
+    bits = map(int, bits)
+    return bits
+    
 
 def bitlisttostring(bitlist):
     """ The input is a list containing
@@ -146,8 +153,8 @@ def addmagicstring(message):
         >>> addmagicstring('Hello')
         'MAGICSTRINGSTARTHelloMAGICSTRINGEND'
     """
-
-    #TODO ...
+    specialString = "THISISASECRET"
+    message = specialString + message + specialString
     return message
 
 def checkmagic(string):
@@ -157,8 +164,8 @@ def checkmagic(string):
     
     # TODO
     # Set to the same string you choose in the function above
-    MAGICSTART = ""
-    MAGICEND   = ""
+    MAGICSTART = "THISISASECRET"
+    MAGICEND   = "THISISASECRET"
 
     result = re.search(MAGICSTART + '([\s\S.]*)' + MAGICEND, string)
     if result:

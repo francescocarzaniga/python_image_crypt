@@ -12,6 +12,9 @@ class imageCrypt(object):
 	def importImage(self, imagePath):
 		inputImage = Image.open(imagePath).convert("L")
 		inputImage.show()
+		
+	def testTemplate (self):
+		print "ciao"
 
 #Main method
 if __name__ == '__main__':
