@@ -6,7 +6,7 @@ import re
 
 def openimage(filename):
     """ Open the image given by the filename specified in the
-    filename string and return the image object.
+    filename string and return the image object:
     """
     # TODO: call the correct function from the Image module
     #  img = Image. ...
@@ -15,19 +15,21 @@ def openimage(filename):
     # ...
     # ...
     # return image
+    
     img = Image.open(filename)
-#     if img.format() == 'PNG':
-#         return img
-#     else:
-#         print 'Please select a valid image.'
-#         return
-    return img
+    if img.format == 'PNG':
+        return img
+    else:
+        print 'Please select a valid image.'
+        return
 
 def saveimage(image,name):
     """ Save the modified image under the specified name.
     """
     # TODO ...
     # ...
+    
+    image.save('name.png')
 
 # -----------------------------------------------
 
@@ -35,6 +37,8 @@ def showimage(image):
     """ Show the image on the screen.
     """
     # TODO
+    
+    image.show()
 
 # ------------------------------------------------
 
@@ -45,12 +49,18 @@ def getLSB(byte):
     """ return the least significant bit of the argument
     """
     # TODO
+    
+    lsb = byte & 1
+    return lsb
 
 def setLSB(byte, bit):
     """ return byte modified such that the least significant
         bit has the value given by bit.
     """
     # TODO
+    
+    new_byte = (byte & ~1) | bit
+    return new_byte
 
 def messagetobitlist(message):
     """ Convert each letter in the message first into
@@ -66,6 +76,11 @@ def messagetobitlist(message):
         
     """
     # TODO
+    bitlist = []
+    
+    for i in message:
+        for x in (format(ord(i), 'b')):
+            bitlist.append(int(x))
     return bitlist
 
 def bitlisttobyte(bits):
@@ -155,58 +170,77 @@ def writelsbtoimage(image, bl):
     """ Change each LSB in each color component of each pixel
         in the image with the binary representation of the message.
     """
-    i = 0
-    px = image.load()
-
-    #TODO: why is this function written like this?
-    #      can you improve it?
-
-    for x in range(image.size[0]):
-        for y in range(image.size[1]):
-            # stop modifying if we reach end of message
-            if i >= len(bl):
-                break
-
-            r,g,b = px[x,y]
-
-            r = setLSB(r,bl[i])
-            i+=1
-            
-            if i < len(bl):
-                g = setLSB(g,bl[i])
-                i+=1    
-            
-
-            if i < len(bl):
-                b = setLSB(b,bl[i])
-                i+=1
-
-            # store the modification
-            px[x,y] = r,g,b
+    
+    #New method
+    import numpy as np
+    
+    img_array = np.array(image)
+    img_array.ravel()[:len(bl)] = setLSB(img_array.ravel()[:len(bl)], bl)
+    image_output = Image.fromarray(img_array)
+    
+    return image_output
+    #Old method
+#     i = 0
+#     px = image.load()
+# 
+#     #TODO: why is this function written like this?
+#     #      can you improve it?
+# 
+#     for x in range(image.size[0]):
+#         for y in range(image.size[1]):
+#             # stop modifying if we reach end of message
+#             if i >= len(bl):
+#                 break
+# 
+#             r,g,b = px[x,y]
+# 
+#             r = setLSB(r,bl[i])
+#             i+=1
+#             
+#             if i < len(bl):
+#                 g = setLSB(g,bl[i])
+#                 i+=1    
+#             
+# 
+#             if i < len(bl):
+#                 b = setLSB(b,bl[i])
+#                 i+=1
+# 
+#             # store the modification
+#             px[x,y] = r,g,b
 
 def getlsbfromimage(image):
     """ Return the least significant bits in the image
         as a list
     """
-
-    px = image.load()
-
-    l = []
     
-    for x in range(image.size[0]):
-        for y in range(image.size[1]):
+    #New method
+    import numpy as np
+    
+    img_array = np.array(image)
+    lsblist = getLSB(img_array.ravel()).tolist()
+    
+    return lsblist
 
-            #TODO: for each pixel in the image extract the three colors
-            #      red, green and blue
-            # ...
-            
-            bit = getLSB(red)
-            # TODO ...
-            bit = getLSB(green)
-            # TODO ...
-            bit = getLSB(blue)
-            # TODO ...
-    return l
+    #Old method
+#     px = image.load()
+# 
+#     l = []
+#     
+#     for x in range(image.size[0]):
+#         for y in range(image.size[1]):
+# 
+#             #TODO: for each pixel in the image extract the three colors
+#             #      red, green and blue
+#             # ...
+#             
+#             bit = getLSB(red)
+#             # TODO ...
+#             bit = getLSB(green)
+#             # TODO ...
+#             bit = getLSB(blue)
+#             # TODO ...
+#     return l
 
     
 def embed(message, image):
