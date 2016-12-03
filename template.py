@@ -6,7 +6,12 @@ import re
 
 def openimage(filename):
     """ Open the image given by the filename specified in the
-    filename string and return the image object:
+    filename string and return the image object.
+
+    Input: filename (the filename of an image with format PNG)
+    Output: open the image
+            "Please select a valid image." (if the image is not PNG)
+
     """
     # TODO: call the correct function from the Image module
     #  img = Image. ...
@@ -25,6 +30,10 @@ def openimage(filename):
 
 def saveimage(image,name):
     """ Save the modified image under the specified name.
+
+    Input: image, name (new name for the image)
+    Output: save the image with the new name
+
     """
     # TODO ...
     # ...
@@ -35,6 +44,7 @@ def saveimage(image,name):
 
 def showimage(image):
     """ Show the image on the screen.
+
     """
     # TODO
     
@@ -47,6 +57,13 @@ def showimage(image):
 
 def getLSB(byte):
     """ return the least significant bit of the argument
+
+    Input: byte
+    Output: lsb
+
+        Example: 
+            >>> getLSB(0b01010101)
+            1
     """
     # TODO
     
@@ -56,6 +73,13 @@ def getLSB(byte):
 def setLSB(byte, bit):
     """ return byte modified such that the least significant
         bit has the value given by bit.
+
+    Input: byte, bit(new bit)
+    Output: new_byte (old byte with the lsb modified with new bit)
+
+        Example: 
+            >>> setLSB(0b01010101,0)
+            0b01010100
     """
     # TODO
     
@@ -67,6 +91,9 @@ def messagetobitlist(message):
         the character code using the ord(c) function.
         Then return a list containing each bit of the resulting 8-bit numbers
         starting from the most significant bit and ending at the lsb.
+
+    Input: message (str)
+    Output: bitlist
 
         Example:
 
@@ -88,6 +115,9 @@ def bitlisttobyte(bits):
         the bits of a byte in order from MSB to LSB
         into a byte.
 
+    Input: bits
+    Output: byte
+
         Example:
         >>> bitlisttobyte([0,1,0,1,0,0,0,1])
         81
@@ -103,8 +133,12 @@ def bytetobitlist(byte):
     """ convert a byte into a list of bits
         Example:
 
-        >>> bytetobitlist(4)
-        [0,0,0,0,0,1,0,0]
+    Input: byte
+    Output: bits (list of bits)
+
+        Example:
+            >>> bytetobitlist(4)
+            [0,0,0,0,0,1,0,0]
         
     """
     byte = bin(byte)[2:]
@@ -121,6 +155,10 @@ def bitlisttostring(bitlist):
         the bits of a message. Take 8 bit pieces
         and convert them to characters. Return the resulting
         string.
+
+    Input: bitlist
+    Output: string
+
     """
 
     string = None
@@ -141,6 +179,7 @@ def bitlisttostring(bitlist):
 
 def isprintable(string):
     """ Check if a string consists only of printable characters.
+
     """
     from string import printable
     return all(c in printable for c in string)
@@ -149,7 +188,10 @@ def addmagicstring(message):
     """ Adds some special string at the beginning and end of
         the message so it can be recognised by the programm later.
 
-        For example:
+    Input: message(str)
+    Output: message with specialString 
+
+        Example:
         >>> addmagicstring('Hello')
         'MAGICSTRINGSTARTHelloMAGICSTRINGEND'
     """
@@ -160,6 +202,10 @@ def addmagicstring(message):
 def checkmagic(string):
     """ Check if the string contains a magic string marker.
         If it does, then return the message in between.
+
+    Input: string
+    Output: string without magicstrings
+            None (if the string does not contain magicstrings)
     """
     
     # TODO
@@ -176,6 +222,10 @@ def checkmagic(string):
 def writelsbtoimage(image, bl):
     """ Change each LSB in each color component of each pixel
         in the image with the binary representation of the message.
+
+    Input: image, bl
+    Output: image_output(image modified)
+
     """
     
     #New method
@@ -219,6 +269,10 @@ def writelsbtoimage(image, bl):
 def getlsbfromimage(image):
     """ Return the least significant bits in the image
         as a list
+
+    Input: image
+    Output: lsblist(list LSB of the image)
+
     """
     
     #New method
@@ -252,6 +306,10 @@ def getlsbfromimage(image):
     
 def embed(message, image):
     """ Embed the string in the image as a secret message.
+
+    Input: message, image
+    Output: image with hidden string
+
     """
     # add some string at the beginning and end of the message
     # such that it is later possible to identify if a message
@@ -266,6 +324,10 @@ def embed(message, image):
 def extract(image):
     """ check if the given image contains any hidden message
         and return the message as a string if there is any.
+
+    Input: image
+    Output: string (hidden string)
+            "Nothing found" (if the image does not contain any hidden message)
     """
     bits = getlsbfromimage(image)
     string = bitlisttostring(bits)
