@@ -106,7 +106,7 @@ def messagetobitlist(message):
     bitlist = []
     
     for i in message:
-        for x in (format(ord(i), 'b')):
+        for x in (format(ord(i), '08b')):
             bitlist.append(int(x))
     return bitlist
 
@@ -195,8 +195,9 @@ def addmagicstring(message):
         >>> addmagicstring('Hello')
         'MAGICSTRINGSTARTHelloMAGICSTRINGEND'
     """
-    specialString = "THISISASECRET"
-    message = specialString + message + specialString
+    specialString = "THISISASECRETSTART"
+    specialStringEnd = "THISISASECRETEND"
+    message = specialString + message + specialStringEnd
     return message
 
 def checkmagic(string):
@@ -210,8 +211,8 @@ def checkmagic(string):
     
     # TODO
     # Set to the same string you choose in the function above
-    MAGICSTART = "THISISASECRET"
-    MAGICEND   = "THISISASECRET"
+    MAGICSTART = "THISISASECRETSTART"
+    MAGICEND   = "THISISASECRETEND"
 
     result = re.search(MAGICSTART + '([\s\S.]*)' + MAGICEND, string)
     if result:
@@ -236,35 +237,6 @@ def writelsbtoimage(image, bl):
     image_output = Image.fromarray(img_array)
     
     return image_output
-    #Old method
-#     i = 0
-#     px = image.load()
-# 
-#     #TODO: why is this function written like this?
-#     #      can you improve it?
-# 
-#     for x in range(image.size[0]):
-#         for y in range(image.size[1]):
-#             # stop modifying if we reach end of message
-#             if i >= len(bl):
-#                 break
-# 
-#             r,g,b = px[x,y]
-# 
-#             r = setLSB(r,bl[i])
-#             i+=1
-#             
-#             if i < len(bl):
-#                 g = setLSB(g,bl[i])
-#                 i+=1    
-#             
-# 
-#             if i < len(bl):
-#                 b = setLSB(b,bl[i])
-#                 i+=1
-# 
-#             # store the modification
-#             px[x,y] = r,g,b
 
 def getlsbfromimage(image):
     """ Return the least significant bits in the image
@@ -283,26 +255,6 @@ def getlsbfromimage(image):
     
     return lsblist
 
-    #Old method
-#     px = image.load()
-# 
-#     l = []
-#     
-#     for x in range(image.size[0]):
-#         for y in range(image.size[1]):
-# 
-#             #TODO: for each pixel in the image extract the three colors
-#             #      red, green and blue
-#             # ...
-#             
-#             bit = getLSB(red)
-#             # TODO ...
-#             bit = getLSB(green)
-#             # TODO ...
-#             bit = getLSB(blue)
-#             # TODO ...
-#     return l
-
     
 def embed(message, image):
     """ Embed the string in the image as a secret message.
@@ -319,7 +271,8 @@ def embed(message, image):
     # Convert the message into a list of bits
     bl = messagetobitlist(message)
 
-    writelsbtoimage(image,bl)
+    img_out = writelsbtoimage(image,bl)
+    return img_out
 
 def extract(image):
     """ check if the given image contains any hidden message
@@ -333,6 +286,9 @@ def extract(image):
     string = bitlisttostring(bits)
     if checkmagic(string) == None:
         print("Nothing found")
+    else:
+        string = checkmagic(string)
+    
     return string
 
 def convcolordepth(image, depthfrom, depthto):
@@ -374,10 +330,11 @@ class TEST(unittest.TestCase):
         """
         import string
         import random
+        from PIL import Image
         string = ''.join(random.choice(string.letters) for _ in range(10))
         img = openimage('face.png')
-        embed(string, img)
-        img.save('TEST2.png')
+        img_out = embed(string, img)
+        img_out.save('TEST2.png')
         img = openimage('TEST2.png')
         m = extract(img)
         self.assertEqual(string, m)
