@@ -161,7 +161,7 @@ def bitlisttostring(bitlist):
 
     """
 
-    string = None
+    string = ""
     
     for i in range(0, len(bitlist), 8):
         bl = bitlist[i:i+8]
