@@ -4,6 +4,7 @@
 from PIL import Image
 import re
 import struct
+import base64
 
 # file access
 # ---------------------------------------------------
@@ -369,11 +370,9 @@ def encripting(string,key):
     import Crypto
     from Crypto.Cipher import ARC4
 
-    if type(string) is not unicode:
-        string = string.encode('utf-8')
-    string = string.decode('utf-8')
     obj1=ARC4.new(key)
-    cipher_text=obj1.encrypt(string)
+    cipher_text = obj1.encrypt(string)
+    cipher_text = base64.b64encode(cipher_text)
     return cipher_text
 
 def decripting(string,key):
@@ -385,6 +384,7 @@ def decripting(string,key):
     import Crypto
     from Crypto.Cipher import ARC4
     
+    string = base64.b64decode(string)
     obj2 = ARC4.new(key)
     cipher_text = obj2.decrypt(string)
     return cipher_text
@@ -406,10 +406,10 @@ class TEST(unittest.TestCase):
         string = ''.join(random.choice(string.letters) for _ in range(10)).decode('UTF-8')
         key = string # accept user input
         img = openimage('face.png')
-        img_out = embed(string, img)
+        img_out = embed(encripting(string, key), img)
         img_out.save('TEST2.png')
         img = openimage('TEST2.png')
-        m = extract(img)
+        m = decripting(extract(img), key)
         self.assertEqual(string, m)
 
 def main():
