@@ -3,6 +3,7 @@
 
 from PIL import Image
 import re
+import struct
 
 # file access
 # ---------------------------------------------------
@@ -113,6 +114,19 @@ def messagetobitlist(message):
             bitlist.append(int(x))
     return bitlist
 
+def extendedmessagetobitlist(message):
+    
+    bitlist = []
+    for i in message:
+        tuple_byte = struct.pack("I", ord(i))
+        for k in tuple_byte:
+            byte = format(ord(k), '08b')
+            for x in byte:
+                bitlist.append(int(x))
+            
+    
+    return bitlist
+
 def bitlisttobyte(bits):
     """ Convert a list of length 8, containing
         the bits of a byte in order from MSB to LSB
@@ -131,6 +145,18 @@ def bitlisttobyte(bits):
     for k in range (0,i):
         byte = byte + 2**k*bits[i-1-k]         
     return byte
+
+def extendedbitlisttobyte(bitlist):
+    
+    bytelist = []
+    for i in range(0, len(bitlist), 8):
+        bl = bitlist[i:i+8]
+        byte = ''
+        for x in bl:
+            byte += str(x)
+        bytelist.append(byte)
+        
+    return bytelist
 
 def bytetobitlist(byte):
     """ convert a byte into a list of bits
@@ -178,6 +204,21 @@ def bitlisttostring(bitlist):
         c = unichr(byte) #get character from bytecode
         string += c
         
+    return string
+
+def extendedbitlisttostring(bitlist):
+    
+    bytelist = extendedbitlisttobyte(bitlist)
+    string = ''
+    for i in range(0, len(bytelist), 4):
+        bl = bytelist[i:i+4]
+        hex_code = ''
+        for x in bl:
+            hex_code += chr(int(x, 2))
+        try:
+            string += unichr(struct.unpack("I", hex_code)[0])
+        except: None
+    
     return string
 
 def isprintable(string):
@@ -272,7 +313,7 @@ def embed(message, image):
     message = addmagicstring(message)
     
     # Convert the message into a list of bits
-    bl = messagetobitlist(message)
+    bl = extendedmessagetobitlist(message)
 
     img_out = writelsbtoimage(image,bl)
     return img_out
@@ -286,7 +327,7 @@ def extract(image):
             "Nothing found" (if the image does not contain any hidden message)
     """
     bits = getlsbfromimage(image)
-    string = bitlisttostring(bits)
+    string = extendedbitlisttostring(bits)
     if checkmagic(string) == None:
         print("Nothing found")
     else:
@@ -328,6 +369,9 @@ def encripting(string,key):
     import Crypto
     from Crypto.Cipher import ARC4
 
+    if type(string) is not unicode:
+        string = string.encode('utf-8')
+    string = string.decode('utf-8')
     obj1=ARC4.new(key)
     cipher_text=obj1.encrypt(string)
     return cipher_text
@@ -340,9 +384,9 @@ def decripting(string,key):
     """
     import Crypto
     from Crypto.Cipher import ARC4
-
-    obj2=ARC4.new(key)
-    cipher_text=obj2.decrypt(string)
+    
+    obj2 = ARC4.new(key)
+    cipher_text = obj2.decrypt(string)
     return cipher_text
 
 # Testing functions
@@ -358,13 +402,16 @@ class TEST(unittest.TestCase):
         """
         import string
         import random
+        import Crypto
+        from Crypto.Cipher import ARC4
         string = ''.join(random.choice(string.letters) for _ in range(10))
+        string = 'è+òàùòè'.decode('UTF-8')
         key = string # accept user input
         img = openimage('face.png')
-        img_out = embed(encripting(string, key), img)
+        img_out = embed(string, img)
         img_out.save('TEST2.png')
         img = openimage('TEST2.png')
-        m = decripting(extract(img), key)
+        m = extract(img)
         self.assertEqual(string, m)
 
 def main():
