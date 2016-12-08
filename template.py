@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-—
+
 from PIL import Image
 import re
 
@@ -172,7 +175,7 @@ def bitlisttostring(bitlist):
         # in order from the msb to the lsb
         
         byte = bitlisttobyte(bl)
-        c = chr(byte) #get character from bytecode
+        c = unichr(byte) #get character from bytecode
         string += c
         
     return string
@@ -330,7 +333,6 @@ class TEST(unittest.TestCase):
         """
         import string
         import random
-        from PIL import Image
         string = ''.join(random.choice(string.letters) for _ in range(10))
         img = openimage('face.png')
         img_out = embed(string, img)
