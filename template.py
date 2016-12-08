@@ -109,23 +109,11 @@ def messagetobitlist(message):
     """
     # TODO
     bitlist = []
+    message = base64.b64encode(message)
     
     for i in message:
         for x in (format(ord(i), '08b')):
             bitlist.append(int(x))
-    return bitlist
-
-def extendedmessagetobitlist(message):
-    
-    bitlist = []
-    for i in message:
-        tuple_byte = struct.pack("I", ord(i))
-        for k in tuple_byte:
-            byte = format(ord(k), '08b')
-            for x in byte:
-                bitlist.append(int(x))
-            
-    
     return bitlist
 
 def bitlisttobyte(bits):
@@ -146,18 +134,6 @@ def bitlisttobyte(bits):
     for k in range (0,i):
         byte = byte + 2**k*bits[i-1-k]         
     return byte
-
-def extendedbitlisttobyte(bitlist):
-    
-    bytelist = []
-    for i in range(0, len(bitlist), 8):
-        bl = bitlist[i:i+8]
-        byte = ''
-        for x in bl:
-            byte += str(x)
-        bytelist.append(byte)
-        
-    return bytelist
 
 def bytetobitlist(byte):
     """ convert a byte into a list of bits
@@ -202,23 +178,10 @@ def bitlisttostring(bitlist):
         # in order from the msb to the lsb
         
         byte = bitlisttobyte(bl)
-        c = unichr(byte) #get character from bytecode
+        c = chr(byte) #get character from bytecode
         string += c
-        
-    return string
-
-def extendedbitlisttostring(bitlist):
     
-    bytelist = extendedbitlisttobyte(bitlist)
-    string = ''
-    for i in range(0, len(bytelist), 4):
-        bl = bytelist[i:i+4]
-        hex_code = ''
-        for x in bl:
-            hex_code += chr(int(x, 2))
-        try:
-            string += unichr(struct.unpack("I", hex_code)[0])
-        except: None
+    string = base64.b64decode(string)
     
     return string
 
@@ -240,8 +203,8 @@ def addmagicstring(message):
         >>> addmagicstring('Hello')
         'MAGICSTRINGSTARTHelloMAGICSTRINGEND'
     """
-    specialString = "THISISASECRETSTART"
-    specialStringEnd = "THISISASECRETEND"
+    specialString = "יום טוב"
+    specialStringEnd = "לילה טוב"
     message = specialString + message + specialStringEnd
     return message
 
@@ -256,8 +219,8 @@ def checkmagic(string):
     
     # TODO
     # Set to the same string you choose in the function above
-    MAGICSTART = "THISISASECRETSTART"
-    MAGICEND   = "THISISASECRETEND"
+    MAGICSTART = "יום טוב"
+    MAGICEND   = "לילה טוב"
 
     result = re.search(MAGICSTART + '([\s\S.]*)' + MAGICEND, string)
     if result:
@@ -314,7 +277,7 @@ def embed(message, image):
     message = addmagicstring(message)
     
     # Convert the message into a list of bits
-    bl = extendedmessagetobitlist(message)
+    bl = messagetobitlist(message)
 
     img_out = writelsbtoimage(image,bl)
     return img_out
@@ -328,7 +291,7 @@ def extract(image):
             "Nothing found" (if the image does not contain any hidden message)
     """
     bits = getlsbfromimage(image)
-    string = extendedbitlisttostring(bits)
+    string = bitlisttostring(bits)
     if checkmagic(string) == None:
         print("Nothing found")
     else:
@@ -372,7 +335,6 @@ def encripting(string,key):
 
     obj1=ARC4.new(key)
     cipher_text = obj1.encrypt(string)
-    cipher_text = base64.b64encode(cipher_text)
     return cipher_text
 
 def decripting(string,key):
@@ -384,7 +346,6 @@ def decripting(string,key):
     import Crypto
     from Crypto.Cipher import ARC4
     
-    string = base64.b64decode(string)
     obj2 = ARC4.new(key)
     cipher_text = obj2.decrypt(string)
     return cipher_text
@@ -403,7 +364,8 @@ class TEST(unittest.TestCase):
         import string
         import random
 
-        string = ''.join(random.choice(string.letters) for _ in range(10)).decode('UTF-8')
+        string = ''.join(random.choice(string.letters) for _ in range(10))
+        string = 'àù1ò2è5p205,ef-.qwe,fqpojef"$%é"£&ç§£°$/L"£P£%$I%2'
         key = string # accept user input
         img = openimage('face.png')
         img_out = embed(encripting(string, key), img)
