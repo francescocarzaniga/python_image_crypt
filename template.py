@@ -316,6 +316,31 @@ def putimage(image_origin, image_target):
     
     return img_new
 
+def encripting(string,key):
+    """ This function receives a string and encrypts it with a stream cipher.
+
+    Input: string, key
+    Output: cipher_text
+    """
+    import Crypto
+    from Crypto.Cipher import ARC4
+
+    obj1=ARC4.new(key)
+    cipher_text=obj1.encrypt(string)
+    return cipher_text
+
+def decripting(string,key):
+    """ This function receives an encrypted string and returns it decrypted.
+
+    Input: string, key
+    Output: cipher_text
+    """
+    import Crypto
+    from Crypto.Cipher import ARC4
+
+    obj2=ARC4.new(key)
+    cipher_text=obj2.decrypt(string)
+    return cipher_text
 
 # Testing functions
 #------------------------------------------------------------------
@@ -332,11 +357,12 @@ class TEST(unittest.TestCase):
         import random
         from PIL import Image
         string = ''.join(random.choice(string.letters) for _ in range(10))
+        key = string # accept user input
         img = openimage('face.png')
-        img_out = embed(string, img)
+        img_out = embed(encripting(string, key), img)
         img_out.save('TEST2.png')
         img = openimage('TEST2.png')
-        m = extract(img)
+        m = decripting(extract(img), key)
         self.assertEqual(string, m)
 
 def main():
