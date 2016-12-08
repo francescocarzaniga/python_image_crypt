@@ -402,8 +402,7 @@ class TEST(unittest.TestCase):
         """
         import string
         import random
-        import Crypto
-        from Crypto.Cipher import ARC4
+
         string = ''.join(random.choice(string.letters) for _ in range(10)).decode('UTF-8')
         key = string # accept user input
         img = openimage('face.png')
