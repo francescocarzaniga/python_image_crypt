@@ -28,7 +28,7 @@ def openimage(filename):
         print 'Please select a valid image.'
         return
 
-def saveimage(image,name):
+def saveimage(image, name):
     """ Save the modified image under the specified name.
 
     Input: image, name (new name for the image)
@@ -37,8 +37,8 @@ def saveimage(image,name):
     """
     # TODO ...
     # ...
-    
-    image.save('name.png')
+
+    image.save('{}.png'.format(name))
 
 # -----------------------------------------------
 
