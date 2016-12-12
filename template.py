@@ -316,8 +316,9 @@ def putimage(image_origin, image_target):
     
     img_origin_array = np.array(image_origin)
     img_target_array = np.array(image_target)
-    img_new_array = setLSB(image_origin_array, img_target_array/128)
-    img_new = Image.fromarray(img_new_array)
+    img_target_array = img_target_array/128
+    img_new_array = setLSB(img_origin_array, img_target_array)
+    img_new = Image.fromarray(img_new_array.astype('uint8'))
     
     return img_new
 
