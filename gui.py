@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from Tkinter import *
 import tkFileDialog
 
@@ -44,14 +47,15 @@ class MyFrame(Frame):
         if filename == "":
             return
         img = sl.openimage(filename)
-        text = self.text1.get(1.0,END + "-1c")
+        '''text = self.text1.get(1.0, END)'''
+        text = "ciaooooooo"
 
-        sl.embed(text,img)
+        img_out = sl.embed(text, img)
         filenameout = tkFileDialog.asksaveasfilename()
         if filenameout == "":
             return
 
-        sl.saveimage(img, filenameout)
+        sl.saveimage(img_out, filenameout)
 
     
     def extract(self):

@@ -203,8 +203,11 @@ def addmagicstring(message):
         >>> addmagicstring('Hello')
         'MAGICSTRINGSTARTHelloMAGICSTRINGEND'
     """
-    specialString = "יום טוב"
-    specialStringEnd = "לילה טוב"
+    #specialString = "יום טוב"
+    #specialStringEnd = "לילה טוב"
+    specialString = "testtestbegin"
+    specialStringEnd = "testtestend"
+
     message = specialString + message + specialStringEnd
     return message
 
@@ -219,8 +222,8 @@ def checkmagic(string):
     
     # TODO
     # Set to the same string you choose in the function above
-    MAGICSTART = "יום טוב"
-    MAGICEND   = "לילה טוב"
+    MAGICSTART = "testtestbegin"
+    MAGICEND   = "testtestend"
 
     result = re.search(MAGICSTART + '([\s\S.]*)' + MAGICEND, string)
     if result:
@@ -369,7 +372,7 @@ class TEST(unittest.TestCase):
         key = string # accept user input
         img = openimage('face.png')
         img_out = embed(encripting(string, key), img)
-        img_out.save('TEST2.png')
+        saveimage(img_out, 'TEST2.png')
         img = openimage('TEST2.png')
         m = decripting(extract(img), key)
         self.assertEqual(string, m)
