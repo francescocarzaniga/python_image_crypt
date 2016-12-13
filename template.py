@@ -3,7 +3,6 @@
 
 from PIL import Image
 import re
-import struct
 import base64
 
 # file access
@@ -12,14 +11,10 @@ import base64
 def openimage(filename):
     """ Open the image given by the filename specified in the
     filename string and return the image object.
-<<<<<<< HEAD
-=======
 
     Input: filename (the filename of an image with format PNG)
     Output: open the image
             "Please select a valid image." (if the image is not PNG)
-
->>>>>>> 09396a9ba4cf1b7adb031a9498c9d8594ad40842
     """
     # TODO: call the correct function from the Image module
     #  img = Image. ...
@@ -63,7 +58,7 @@ def showimage(image):
 # binary data functions
 # ------------------------------------------------
 
-def getLSB(byte):
+def getLSB(byte, depth):
     """ return the least significant bit of the argument
 
     Input: byte
@@ -75,10 +70,10 @@ def getLSB(byte):
     """
     # TODO
     
-    lsb = byte & 1
+    lsb = byte & (2**depth-1)
     return lsb
 
-def setLSB(byte, bit):
+def setLSB(byte, bit, depth):
     """ return byte modified such that the least significant
         bit has the value given by bit.
 
@@ -91,7 +86,7 @@ def setLSB(byte, bit):
     """
     # TODO
     
-    new_byte = (byte & ~1) | bit
+    new_byte = (byte & ~(2**depth-1)) | bit
     return new_byte
 
 def messagetobitlist(message):
@@ -245,9 +240,11 @@ def writelsbtoimage(image, bl):
     
     #New method
     import numpy as np
+    import random
     
     img_array = np.array(image)
-    img_array.ravel()[:len(bl)] = setLSB(img_array.ravel()[:len(bl)], bl)
+    ins_point = random.randrange(img_array.size-len(bl))
+    img_array.ravel()[ins_point:ins_point+len(bl)] = setLSB(img_array.ravel()[ins_point:ins_point+len(bl)], bl, 1)
     image_output = Image.fromarray(img_array)
     
     return image_output
@@ -265,7 +262,7 @@ def getlsbfromimage(image):
     import numpy as np
     
     img_array = np.array(image)
-    lsblist = getLSB(img_array.ravel()).tolist()
+    lsblist = getLSB(img_array.ravel(), 1).tolist()
     
     return lsblist
 
@@ -305,22 +302,25 @@ def extract(image):
     
     return string
 
-def findimage(image):
+def findimage(image, depth):
     import numpy as np
     
     img_array = np.array(image)
-    lsb_array = getLSB(img_array)
-    img_new = Image.fromarray(lsb_array*255)
+    lsb_array = getLSB(img_array, depth)
+    lsb_array = lsb_array*(255/(2**depth-1))
+    img_new = Image.fromarray(lsb_array)
     
     return img_new
 
-def putimage(image_origin, image_target):
+def putimage(image_origin, image_target, depth):
     import numpy as np
+    import math
     
     img_origin_array = np.array(image_origin)
     img_target_array = np.array(image_target)
-    img_target_array = img_target_array/128
-    img_new_array = setLSB(img_origin_array, img_target_array)
+    print img_target_array
+    img_target_array = img_target_array/int(math.ceil(255/float((2**depth))))
+    img_new_array = setLSB(img_origin_array, img_target_array, depth)
     img_new = Image.fromarray(img_new_array.astype('uint8'))
     
     return img_new
@@ -365,15 +365,21 @@ class TEST(unittest.TestCase):
         import string
         import random
 
-        string = ''.join(random.choice(string.letters) for _ in range(10))
-        string = 'àù1ò2è5p205,ef-.qwe,fqpojef"$%é"£&ç§£°$/L"£P£%$I%2'
-        key = string # accept user input
-        img = openimage('face.png')
-        img_out = embed(encripting(string, key), img)
-        saveimage(img_out, 'TEST2.png')
-        img = openimage('TEST2.png')
-        m = decripting(extract(img), key)
-        self.assertEqual(string, m)
+        # string = ''.join(random.choice(string.letters) for _ in range(10))
+        # string = 'àù1ò2è5p205,ef-.qwe,fqpojef"$%é"£&ç§£°$/L"£P£%$I%2'
+        # key = string # accept user input
+        img_or = openimage('face.png')
+        # img_out = embed(encripting(string, key), img)
+        # saveimage(img_out, 'TEST2.png')
+        img_targ = openimage('kresch.png')
+        # m = decripting(extract(img), key)
+        # self.assertEqual(string, m)
+
+        #saveimage(putimage(img_or, img_targ, 3), 'test')
+
+        #showimage(findimage(putimage(img_or, img_targ, 3), 3))
+        img = openimage('img/univers_original.png')
+        showimage(findimage(img, 1))
 
 def main():
     unittest.main()
