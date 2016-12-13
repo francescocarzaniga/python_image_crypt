@@ -10,7 +10,7 @@ import base64
 # ---------------------------------------------------
 
 def openimage(filename):
-    """ Open the image given by the filename specified in the
+    """ Open the image given b4y the filename specified in the
     filename string and return the image object.
 <<<<<<< HEAD
 =======
