@@ -282,9 +282,9 @@ def extract(image, key):
 
     return string_b64
 
-def findimage(image, depth):
-    """ This function finds the hidden image.
 
+def findImage(image, depth):
+    """ This function finds the hiddenimage
     Input: image, depth (depth of the target image)
     Output: img_new (target image)
     """
@@ -297,7 +297,7 @@ def findimage(image, depth):
     
     return img_new
 
-def putimage(image_origin, image_target, depth):
+def putImage(image_origin, image_target, depth):
     """ This function puts an image into the original image, with your choosen depth of colour.
 
     Input: image_origin (original), image_target, depth
