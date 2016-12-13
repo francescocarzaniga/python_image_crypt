@@ -3,6 +3,7 @@
 
 from Tkinter import *
 import tkFileDialog
+import base64
 
 
 # You can test your code with this gui as soon as you
@@ -48,6 +49,7 @@ class MyFrame(Frame):
             return
         img = sl.openimage(filename)
         text = self.text1.get(1.0, END + '-1c')
+        text = base64.b64encode(text.encode('utf8'))
 
         img_out = sl.embed(text, img)
         filenameout = tkFileDialog.asksaveasfilename()
@@ -63,6 +65,7 @@ class MyFrame(Frame):
             return
         img = sl.openimage(filename)
         text = sl.extract(img)
+        text = base64.b64decode(text)
         if text == None:
             text = "Nothing found"
         self.text1.delete(1.0, END)
@@ -78,7 +81,7 @@ class MyFrame(Frame):
         print("Max. (chr) storage size in image:", self.storagesize(img))
 
     def storagesize(self, image):
-        return image.size[0] * image.size[1] * 3 // 8 - len(sl.addmagicstring(""))
+        return int(float(2)/3 * (image.size[0] * image.size[1] * 3 // 8 - len(sl.addmagicstring(""))))
 
 def main():
     MyFrame().mainloop()

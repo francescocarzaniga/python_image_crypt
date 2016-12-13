@@ -47,7 +47,7 @@ def showimage(image):
 # ------------------------------------------------
 
 def getLSB(byte, depth):
-    """ return the least significant bit of the argument
+    """ return the least {depth} significant bit(s) of the argument
 
     Input: byte
     Output: lsb
@@ -61,8 +61,8 @@ def getLSB(byte, depth):
     return lsb
 
 def setLSB(byte, bit, depth):
-    """ return byte modified such that the least significant
-        bit has the value given by bit.
+    """ return byte modified such that the least {depth} significant
+        bit(s) have the value given by bit.
 
     Input: byte, bit(new bit)
     Output: new_byte (old byte with the lsb modified with new bit)
@@ -93,7 +93,7 @@ def messagetobitlist(message):
     """
    
     bitlist = []
-    message = base64.b64encode(message)
+    #message = base64.b64encode(message)
     
     for i in message:
         for x in (format(ord(i), '08b')):
@@ -162,7 +162,7 @@ def bitlisttostring(bitlist):
         c = chr(byte) #get character from bytecode
         string += c
     
-    string = base64.b64decode(string)
+    #string = base64.b64decode(string)
 
     return string
 
@@ -221,7 +221,7 @@ def writelsbtoimage(image, bl):
     import random
     
     img_array = np.array(image)
-    ins_point = 0 #random.randrange(0, img_array.size-len(bl), 8)
+    ins_point = random.randrange(0, img_array.size-len(bl), 8)
     img_array.ravel()[ins_point:ins_point+len(bl)] = setLSB(img_array.ravel()[ins_point:ins_point+len(bl)], bl, 1)
     image_output = Image.fromarray(img_array)
     
@@ -278,7 +278,7 @@ def extract(image):
     return string
 
 def findimage(image, depth):
-    """ This function finds the hiddenimage.
+    """ This function finds the hidden image.
 
     Input: image, depth (depth of the target image)
     Output: img_new (target image)
@@ -318,7 +318,8 @@ def encripting(string,key):
     import Crypto
     from Crypto.Cipher import ARC4
 
-    obj1=ARC4.new(key)
+    string = base64.b64encode(string)
+    obj1 = ARC4.new(key)
     cipher_text = obj1.encrypt(string)
     return cipher_text
 
@@ -333,6 +334,7 @@ def decripting(string,key):
     
     obj2 = ARC4.new(key)
     cipher_text = obj2.decrypt(string)
+    cipher_text = base64.b64decode(cipher_text)
     return cipher_text
 
 # Testing functions
@@ -350,13 +352,15 @@ class TEST(unittest.TestCase):
         import random
 
         string = ''.join(random.choice(string.letters) for _ in range(10))
-        string = 'àù1ò2è5p205,ef-.qwe,fqpojef"$%é"£&ç§£°$/L"£P£%$I%2'
+        string = 'helloüèü'
         key = string # accept user input
         img = openimage('face.png')
         img_out = embed(encripting(string, key), img)
         saveimage(img_out, 'TEST2')
         img = openimage('TEST2.png')
         m = decripting(extract(img), key)
+        print repr(m)
+        print m
         self.assertEqual(string, m)
 
 def main():
