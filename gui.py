@@ -47,7 +47,7 @@ class MyFrame(Frame):
         if filename == "":
             return
         img = sl.openimage(filename)
-        text = self.text1.get(1.0, END)
+        text = self.text1.get(1.0, END + '-1c')
 
         img_out = sl.embed(text, img)
         filenameout = tkFileDialog.asksaveasfilename()

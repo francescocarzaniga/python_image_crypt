@@ -3,31 +3,19 @@
 
 from PIL import Image
 import re
-import struct
 import base64
 
 # file access
 # ---------------------------------------------------
 
 def openimage(filename):
-    """ Open the image given b4y the filename specified in the
+    """ Open the image (only lossless images are supported) given by the filename specified in the
     filename string and return the image object.
-<<<<<<< HEAD
-=======
 
     Input: filename (the filename of an image with format PNG)
     Output: open the image
             "Please select a valid image." (if the image is not PNG)
-
->>>>>>> 09396a9ba4cf1b7adb031a9498c9d8594ad40842
     """
-    # TODO: call the correct function from the Image module
-    #  img = Image. ...
-    # TODO: make sure the image format is PNG (only lossless
-    #  images are supported)
-    # ...
-    # ...
-    # return image
     
     img = Image.open(filename)
     if img.format == 'PNG':
@@ -41,20 +29,15 @@ def saveimage(image, name):
 
     Input: image, name (new name for the image)
     Output: save the image with the new name
-
     """
-    # TODO ...
-    # ...
-
+   
     image.save('{}.png'.format(name))
 
 # -----------------------------------------------
 
 def showimage(image):
     """ Show the image on the screen.
-
     """
-    # TODO
     
     image.show()
 
@@ -63,7 +46,7 @@ def showimage(image):
 # binary data functions
 # ------------------------------------------------
 
-def getLSB(byte):
+def getLSB(byte, depth):
     """ return the least significant bit of the argument
 
     Input: byte
@@ -73,12 +56,11 @@ def getLSB(byte):
             >>> getLSB(0b01010101)
             1
     """
-    # TODO
     
-    lsb = byte & 1
+    lsb = byte & (2**depth-1)
     return lsb
 
-def setLSB(byte, bit):
+def setLSB(byte, bit, depth):
     """ return byte modified such that the least significant
         bit has the value given by bit.
 
@@ -89,9 +71,8 @@ def setLSB(byte, bit):
             >>> setLSB(0b01010101,0)
             0b01010100
     """
-    # TODO
     
-    new_byte = (byte & ~1) | bit
+    new_byte = (byte & ~(2**depth-1)) | bit
     return new_byte
 
 def messagetobitlist(message):
@@ -110,7 +91,7 @@ def messagetobitlist(message):
         [0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0]
         
     """
-    # TODO
+   
     bitlist = []
     message = base64.b64encode(message)
     
@@ -129,8 +110,7 @@ def bitlisttobyte(bits):
 
         Example:
         >>> bitlisttobyte([0,1,0,1,0,0,0,1])
-        81
-        
+        81    
     """
     i = len(bits)
     byte = 0 
@@ -147,8 +127,7 @@ def bytetobitlist(byte):
 
         Example:
             >>> bytetobitlist(4)
-            [0,0,0,0,0,1,0,0]
-        
+            [0,0,0,0,0,1,0,0]    
     """
     byte = bin(byte)[2:]
     str(byte)
@@ -167,7 +146,6 @@ def bitlisttostring(bitlist):
 
     Input: bitlist
     Output: string
-
     """
 
     string = ""
@@ -185,12 +163,11 @@ def bitlisttostring(bitlist):
         string += c
     
     string = base64.b64decode(string)
-    
+
     return string
 
 def isprintable(string):
     """ Check if a string consists only of printable characters.
-
     """
     from string import printable
     return all(c in printable for c in string)
@@ -223,8 +200,6 @@ def checkmagic(string):
             None (if the string does not contain magicstrings)
     """
     
-    # TODO
-    # Set to the same string you choose in the function above
     MAGICSTART = "testtestbegin"
     MAGICEND   = "testtestend"
 
@@ -240,15 +215,14 @@ def writelsbtoimage(image, bl):
 
     Input: image, bl
     Output: image_output(image modified)
-
     """
     
-    #New method
     import numpy as np
+    import random
     
-    image = image.load()
     img_array = np.array(image)
-    img_array.ravel()[:len(bl)] = setLSB(img_array.ravel()[:len(bl)], bl)
+    ins_point = 0 #random.randrange(0, img_array.size-len(bl), 8)
+    img_array.ravel()[ins_point:ins_point+len(bl)] = setLSB(img_array.ravel()[ins_point:ins_point+len(bl)], bl, 1)
     image_output = Image.fromarray(img_array)
     
     return image_output
@@ -259,15 +233,12 @@ def getlsbfromimage(image):
 
     Input: image
     Output: lsblist(list LSB of the image)
-
     """
     
-    #New method
     import numpy as np
     
-    image = image.load()
     img_array = np.array(image)
-    lsblist = getLSB(img_array.ravel()).tolist()
+    lsblist = getLSB(img_array.ravel(), 1).tolist()
     
     return lsblist
 
@@ -277,7 +248,6 @@ def embed(message, image):
 
     Input: message, image
     Output: image with hidden string
-
     """
     # add some string at the beginning and end of the message
     # such that it is later possible to identify if a message
@@ -307,22 +277,34 @@ def extract(image):
     
     return string
 
-def findimage(image):
+def findimage(image, depth):
+    """ This function finds the hiddenimage.
+
+    Input: image, depth (depth of the target image)
+    Output: img_new (target image)
+    """
     import numpy as np
     
     img_array = np.array(image)
-    lsb_array = getLSB(img_array)
-    img_new = Image.fromarray(lsb_array*255)
+    lsb_array = getLSB(img_array, depth)
+    lsb_array = lsb_array*(255/(2**depth-1))
+    img_new = Image.fromarray(lsb_array)
     
     return img_new
 
-def putimage(image_origin, image_target):
+def putimage(image_origin, image_target, depth):
+    """ This function puts an image into the original image, with your choosen depth of colour.
+
+    Input: image_origin (original), image_target, depth
+    Output: img_new (original image with the hidden image inside)
+    """
     import numpy as np
+    import math
     
     img_origin_array = np.array(image_origin)
     img_target_array = np.array(image_target)
-    img_target_array = img_target_array/128
-    img_new_array = setLSB(img_origin_array, img_target_array)
+    img_target_array = img_target_array/int(math.ceil(255/float((2**depth))))
+    img_new_array = setLSB(img_origin_array, img_target_array, depth)
     img_new = Image.fromarray(img_new_array.astype('uint8'))
     
     return img_new
@@ -372,7 +354,7 @@ class TEST(unittest.TestCase):
         key = string # accept user input
         img = openimage('face.png')
         img_out = embed(encripting(string, key), img)
-        saveimage(img_out, 'TEST2.png')
+        saveimage(img_out, 'TEST2')
         img = openimage('TEST2.png')
         m = decripting(extract(img), key)
         self.assertEqual(string, m)
