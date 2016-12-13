@@ -9,20 +9,13 @@ import base64
 # ---------------------------------------------------
 
 def openimage(filename):
-    """ Open the image given by the filename specified in the
+    """ Open the image (only lossless images are supported) given by the filename specified in the
     filename string and return the image object.
 
     Input: filename (the filename of an image with format PNG)
     Output: open the image
             "Please select a valid image." (if the image is not PNG)
     """
-    # TODO: call the correct function from the Image module
-    #  img = Image. ...
-    # TODO: make sure the image format is PNG (only lossless
-    #  images are supported)
-    # ...
-    # ...
-    # return image
     
     img = Image.open(filename)
     if img.format == 'PNG':
@@ -36,20 +29,15 @@ def saveimage(image, name):
 
     Input: image, name (new name for the image)
     Output: save the image with the new name
-
     """
-    # TODO ...
-    # ...
-
+   
     image.save('{}.png'.format(name))
 
 # -----------------------------------------------
 
 def showimage(image):
     """ Show the image on the screen.
-
     """
-    # TODO
     
     image.show()
 
@@ -68,7 +56,6 @@ def getLSB(byte, depth):
             >>> getLSB(0b01010101)
             1
     """
-    # TODO
     
     lsb = byte & (2**depth-1)
     return lsb
@@ -84,7 +71,6 @@ def setLSB(byte, bit, depth):
             >>> setLSB(0b01010101,0)
             0b01010100
     """
-    # TODO
     
     new_byte = (byte & ~(2**depth-1)) | bit
     return new_byte
@@ -105,7 +91,7 @@ def messagetobitlist(message):
         [0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0]
         
     """
-    # TODO
+   
     bitlist = []
     message = base64.b64encode(message)
     
@@ -124,8 +110,7 @@ def bitlisttobyte(bits):
 
         Example:
         >>> bitlisttobyte([0,1,0,1,0,0,0,1])
-        81
-        
+        81    
     """
     i = len(bits)
     byte = 0 
@@ -142,8 +127,7 @@ def bytetobitlist(byte):
 
         Example:
             >>> bytetobitlist(4)
-            [0,0,0,0,0,1,0,0]
-        
+            [0,0,0,0,0,1,0,0]    
     """
     byte = bin(byte)[2:]
     str(byte)
@@ -162,7 +146,6 @@ def bitlisttostring(bitlist):
 
     Input: bitlist
     Output: string
-
     """
 
     string = ""
@@ -180,12 +163,11 @@ def bitlisttostring(bitlist):
         string += c
     
     string = base64.b64decode(string)
-    
+
     return string
 
 def isprintable(string):
     """ Check if a string consists only of printable characters.
-
     """
     from string import printable
     return all(c in printable for c in string)
@@ -218,8 +200,6 @@ def checkmagic(string):
             None (if the string does not contain magicstrings)
     """
     
-    # TODO
-    # Set to the same string you choose in the function above
     MAGICSTART = "testtestbegin"
     MAGICEND   = "testtestend"
 
@@ -235,15 +215,13 @@ def writelsbtoimage(image, bl):
 
     Input: image, bl
     Output: image_output(image modified)
-
     """
     
-    #New method
     import numpy as np
     import random
     
     img_array = np.array(image)
-    ins_point = random.randrange(img_array.size-len(bl))
+    ins_point = 0 #random.randrange(0, img_array.size-len(bl), 8)
     img_array.ravel()[ins_point:ins_point+len(bl)] = setLSB(img_array.ravel()[ins_point:ins_point+len(bl)], bl, 1)
     image_output = Image.fromarray(img_array)
     
@@ -255,10 +233,8 @@ def getlsbfromimage(image):
 
     Input: image
     Output: lsblist(list LSB of the image)
-
     """
     
-    #New method
     import numpy as np
     
     img_array = np.array(image)
@@ -272,7 +248,6 @@ def embed(message, image):
 
     Input: message, image
     Output: image with hidden string
-
     """
     # add some string at the beginning and end of the message
     # such that it is later possible to identify if a message
@@ -303,6 +278,11 @@ def extract(image):
     return string
 
 def findimage(image, depth):
+    """ This function finds the hiddenimage.
+
+    Input: image, depth (depth of the target image)
+    Output: img_new (target image)
+    """
     import numpy as np
     
     img_array = np.array(image)
@@ -313,12 +293,16 @@ def findimage(image, depth):
     return img_new
 
 def putimage(image_origin, image_target, depth):
+    """ This function puts an image into the original image, with your choosen depth of colour.
+
+    Input: image_origin (original), image_target, depth
+    Output: img_new (original image with the hidden image inside)
+    """
     import numpy as np
     import math
     
     img_origin_array = np.array(image_origin)
     img_target_array = np.array(image_target)
-    print img_target_array
     img_target_array = img_target_array/int(math.ceil(255/float((2**depth))))
     img_new_array = setLSB(img_origin_array, img_target_array, depth)
     img_new = Image.fromarray(img_new_array.astype('uint8'))
@@ -365,21 +349,15 @@ class TEST(unittest.TestCase):
         import string
         import random
 
-        # string = ''.join(random.choice(string.letters) for _ in range(10))
-        # string = 'àù1ò2è5p205,ef-.qwe,fqpojef"$%é"£&ç§£°$/L"£P£%$I%2'
-        # key = string # accept user input
-        img_or = openimage('face.png')
-        # img_out = embed(encripting(string, key), img)
-        # saveimage(img_out, 'TEST2.png')
-        img_targ = openimage('kresch.png')
-        # m = decripting(extract(img), key)
-        # self.assertEqual(string, m)
-
-        #saveimage(putimage(img_or, img_targ, 3), 'test')
-
-        #showimage(findimage(putimage(img_or, img_targ, 3), 3))
-        img = openimage('img/univers_original.png')
-        showimage(findimage(img, 1))
+        string = ''.join(random.choice(string.letters) for _ in range(10))
+        string = 'àù1ò2è5p205,ef-.qwe,fqpojef"$%é"£&ç§£°$/L"£P£%$I%2'
+        key = string # accept user input
+        img = openimage('face.png')
+        img_out = embed(encripting(string, key), img)
+        saveimage(img_out, 'TEST2')
+        img = openimage('TEST2.png')
+        m = decripting(extract(img), key)
+        self.assertEqual(string, m)
 
 def main():
     unittest.main()
