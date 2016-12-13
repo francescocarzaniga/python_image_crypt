@@ -221,8 +221,8 @@ def writelsbtoimage(image, bl):
     import random
     
     img_array = np.array(image)
-    ins_point = random.randrange(0, img_array.size-len(bl), 8)
-    img_array.ravel()[ins_point:ins_point+len(bl)] = setLSB(img_array.ravel()[ins_point:ins_point+len(bl)], bl, 1)
+    ins_point = 0 # random.randrange(0, img_array.size-len(bl), 8)
+    img_array.ravel()[ins_point:(ins_point+len(bl))] = setLSB(img_array.ravel()[ins_point:(ins_point+len(bl))], bl, 1)
     image_output = Image.fromarray(img_array)
     
     return image_output
@@ -243,7 +243,7 @@ def getlsbfromimage(image):
     return lsblist
 
     
-def embed(message, image):
+def embed(message, image, key):
     """ Embed the string in the image as a secret message.
 
     Input: message, image
@@ -253,14 +253,16 @@ def embed(message, image):
     # such that it is later possible to identify if a message
     # has been hidden.
     message = addmagicstring(message)
-    
-    # Convert the message into a list of bits
-    bl = messagetobitlist(message)
+    message_b64 = base64.b64encode(message)
+    message_encrypted = encripting(message_b64, key)
 
-    img_out = writelsbtoimage(image,bl)
+    # Convert the message into a list of bits
+    bl = messagetobitlist(message_encrypted)
+
+    img_out = writelsbtoimage(image, bl)
     return img_out
 
-def extract(image):
+def extract(image, key):
     """ check if the given image contains any hidden message
         and return the message as a string if there is any.
 
@@ -270,12 +272,15 @@ def extract(image):
     """
     bits = getlsbfromimage(image)
     string = bitlisttostring(bits)
-    if checkmagic(string) == None:
+    string_decrypted = decripting(string, key)
+    string_b64 = base64.b64decode(string_decrypted)
+
+    if checkmagic(string_b64) == None:
         print("Nothing found")
     else:
-        string = checkmagic(string)
-    
-    return string
+        string_b64 = checkmagic(string_b64)
+
+    return string_b64
 
 def findimage(image, depth):
     """ This function finds the hidden image.
@@ -318,7 +323,6 @@ def encripting(string,key):
     import Crypto
     from Crypto.Cipher import ARC4
 
-    string = base64.b64encode(string)
     obj1 = ARC4.new(key)
     cipher_text = obj1.encrypt(string)
     return cipher_text
@@ -334,7 +338,6 @@ def decripting(string,key):
     
     obj2 = ARC4.new(key)
     cipher_text = obj2.decrypt(string)
-    cipher_text = base64.b64decode(cipher_text)
     return cipher_text
 
 # Testing functions
@@ -352,16 +355,15 @@ class TEST(unittest.TestCase):
         import random
 
         string = ''.join(random.choice(string.letters) for _ in range(10))
-        string = 'helloüèü'
+        string = 'helloéàèéäüöüö'
         key = string # accept user input
         img = openimage('face.png')
-        img_out = embed(encripting(string, key), img)
+        img_out = embed(string, img, string)
         saveimage(img_out, 'TEST2')
         img = openimage('TEST2.png')
-        m = decripting(extract(img), key)
-        print repr(m)
-        print m
+        m = extract(img, string)
         self.assertEqual(string, m)
+        #showimage(findimage(putimage(img, img_or, 4), 4))
 
 def main():
     unittest.main()
