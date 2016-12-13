@@ -1,5 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-—
+
 from PIL import Image
 import re
+import struct
+import base64
 
 # file access
 # ---------------------------------------------------
@@ -7,6 +12,14 @@ import re
 def openimage(filename):
     """ Open the image given by the filename specified in the
     filename string and return the image object.
+<<<<<<< HEAD
+=======
+
+    Input: filename (the filename of an image with format PNG)
+    Output: open the image
+            "Please select a valid image." (if the image is not PNG)
+
+>>>>>>> 09396a9ba4cf1b7adb031a9498c9d8594ad40842
     """
     # TODO: call the correct function from the Image module
     #  img = Image. ...
@@ -23,18 +36,23 @@ def openimage(filename):
         print 'Please select a valid image.'
         return
 
-def saveimage(image,name):
+def saveimage(image, name):
     """ Save the modified image under the specified name.
+
+    Input: image, name (new name for the image)
+    Output: save the image with the new name
+
     """
     # TODO ...
     # ...
-    
-    image.save('name.png')
+
+    image.save('{}.png'.format(name))
 
 # -----------------------------------------------
 
 def showimage(image):
     """ Show the image on the screen.
+
     """
     # TODO
     
@@ -47,6 +65,13 @@ def showimage(image):
 
 def getLSB(byte):
     """ return the least significant bit of the argument
+
+    Input: byte
+    Output: lsb
+
+        Example: 
+            >>> getLSB(0b01010101)
+            1
     """
     # TODO
     
@@ -56,6 +81,13 @@ def getLSB(byte):
 def setLSB(byte, bit):
     """ return byte modified such that the least significant
         bit has the value given by bit.
+
+    Input: byte, bit(new bit)
+    Output: new_byte (old byte with the lsb modified with new bit)
+
+        Example: 
+            >>> setLSB(0b01010101,0)
+            0b01010100
     """
     # TODO
     
@@ -68,6 +100,9 @@ def messagetobitlist(message):
         Then return a list containing each bit of the resulting 8-bit numbers
         starting from the most significant bit and ending at the lsb.
 
+    Input: message (str)
+    Output: bitlist
+
         Example:
 
         >>> msg = messagetobitlist("AB")
@@ -77,9 +112,10 @@ def messagetobitlist(message):
     """
     # TODO
     bitlist = []
+    message = base64.b64encode(message)
     
     for i in message:
-        for x in (format(ord(i), 'b')):
+        for x in (format(ord(i), '08b')):
             bitlist.append(int(x))
     return bitlist
 
@@ -88,35 +124,53 @@ def bitlisttobyte(bits):
         the bits of a byte in order from MSB to LSB
         into a byte.
 
+    Input: bits
+    Output: byte
+
         Example:
         >>> bitlisttobyte([0,1,0,1,0,0,0,1])
         81
         
     """
-    byte = 0
-    # TODO: convert 8 bits into a byte ....
-    # ...
-    # ...
+    i = len(bits)
+    byte = 0 
+    for k in range (0,i):
+        byte = byte + 2**k*bits[i-1-k]         
     return byte
 
 def bytetobitlist(byte):
     """ convert a byte into a list of bits
         Example:
 
-        >>> bytetobitlist(4)
-        [0,0,0,0,0,1,0,0]
+    Input: byte
+    Output: bits (list of bits)
+
+        Example:
+            >>> bytetobitlist(4)
+            [0,0,0,0,0,1,0,0]
         
     """
-    # TODO
+    byte = bin(byte)[2:]
+    str(byte)
+    bits = []
+    for i in byte: 
+        bits.append(i)
+    bits = map(int, bits)
+    return bits
+    
 
 def bitlisttostring(bitlist):
     """ The input is a list containing
         the bits of a message. Take 8 bit pieces
         and convert them to characters. Return the resulting
         string.
+
+    Input: bitlist
+    Output: string
+
     """
 
-    string = None
+    string = ""
     
     for i in range(0, len(bitlist), 8):
         bl = bitlist[i:i+8]
@@ -129,11 +183,14 @@ def bitlisttostring(bitlist):
         byte = bitlisttobyte(bl)
         c = chr(byte) #get character from bytecode
         string += c
-        
+    
+    string = base64.b64decode(string)
+    
     return string
 
 def isprintable(string):
     """ Check if a string consists only of printable characters.
+
     """
     from string import printable
     return all(c in printable for c in string)
@@ -142,23 +199,34 @@ def addmagicstring(message):
     """ Adds some special string at the beginning and end of
         the message so it can be recognised by the programm later.
 
-        For example:
+    Input: message(str)
+    Output: message with specialString 
+
+        Example:
         >>> addmagicstring('Hello')
         'MAGICSTRINGSTARTHelloMAGICSTRINGEND'
     """
+    #specialString = "יום טוב"
+    #specialStringEnd = "לילה טוב"
+    specialString = "testtestbegin"
+    specialStringEnd = "testtestend"
 
-    #TODO ...
+    message = specialString + message + specialStringEnd
     return message
 
 def checkmagic(string):
     """ Check if the string contains a magic string marker.
         If it does, then return the message in between.
+
+    Input: string
+    Output: string without magicstrings
+            None (if the string does not contain magicstrings)
     """
     
     # TODO
     # Set to the same string you choose in the function above
-    MAGICSTART = ""
-    MAGICEND   = ""
+    MAGICSTART = "testtestbegin"
+    MAGICEND   = "testtestend"
 
     result = re.search(MAGICSTART + '([\s\S.]*)' + MAGICEND, string)
     if result:
@@ -169,6 +237,10 @@ def checkmagic(string):
 def writelsbtoimage(image, bl):
     """ Change each LSB in each color component of each pixel
         in the image with the binary representation of the message.
+
+    Input: image, bl
+    Output: image_output(image modified)
+
     """
     
     #New method
@@ -180,39 +252,14 @@ def writelsbtoimage(image, bl):
     image_output = Image.fromarray(img_array)
     
     return image_output
-    #Old method
-#     i = 0
-#     px = image.load()
-# 
-#     #TODO: why is this function written like this?
-#     #      can you improve it?
-# 
-#     for x in range(image.size[0]):
-#         for y in range(image.size[1]):
-#             # stop modifying if we reach end of message
-#             if i >= len(bl):
-#                 break
-# 
-#             r,g,b = px[x,y]
-# 
-#             r = setLSB(r,bl[i])
-#             i+=1
-#             
-#             if i < len(bl):
-#                 g = setLSB(g,bl[i])
-#                 i+=1    
-#             
-# 
-#             if i < len(bl):
-#                 b = setLSB(b,bl[i])
-#                 i+=1
-# 
-#             # store the modification
-#             px[x,y] = r,g,b
 
 def getlsbfromimage(image):
     """ Return the least significant bits in the image
         as a list
+
+    Input: image
+    Output: lsblist(list LSB of the image)
+
     """
     
     #New method
@@ -224,29 +271,13 @@ def getlsbfromimage(image):
     
     return lsblist
 
-    #Old method
-#     px = image.load()
-# 
-#     l = []
-#     
-#     for x in range(image.size[0]):
-#         for y in range(image.size[1]):
-# 
-#             #TODO: for each pixel in the image extract the three colors
-#             #      red, green and blue
-#             # ...
-#             
-#             bit = getLSB(red)
-#             # TODO ...
-#             bit = getLSB(green)
-#             # TODO ...
-#             bit = getLSB(blue)
-#             # TODO ...
-#     return l
-
     
 def embed(message, image):
     """ Embed the string in the image as a secret message.
+
+    Input: message, image
+    Output: image with hidden string
+
     """
     # add some string at the beginning and end of the message
     # such that it is later possible to identify if a message
@@ -256,18 +287,71 @@ def embed(message, image):
     # Convert the message into a list of bits
     bl = messagetobitlist(message)
 
-    writelsbtoimage(image,bl)
+    img_out = writelsbtoimage(image,bl)
+    return img_out
 
 def extract(image):
     """ check if the given image contains any hidden message
         and return the message as a string if there is any.
+
+    Input: image
+    Output: string (hidden string)
+            "Nothing found" (if the image does not contain any hidden message)
     """
     bits = getlsbfromimage(image)
     string = bitlisttostring(bits)
     if checkmagic(string) == None:
         print("Nothing found")
+    else:
+        string = checkmagic(string)
+    
     return string
 
+def findimage(image):
+    import numpy as np
+    
+    img_array = np.array(image)
+    lsb_array = getLSB(img_array)
+    img_new = Image.fromarray(lsb_array*255)
+    
+    return img_new
+
+def putimage(image_origin, image_target):
+    import numpy as np
+    
+    img_origin_array = np.array(image_origin)
+    img_target_array = np.array(image_target)
+    img_target_array = img_target_array/128
+    img_new_array = setLSB(img_origin_array, img_target_array)
+    img_new = Image.fromarray(img_new_array.astype('uint8'))
+    
+    return img_new
+
+def encripting(string,key):
+    """ This function receives a string and encrypts it with a stream cipher.
+
+    Input: string, key
+    Output: cipher_text
+    """
+    import Crypto
+    from Crypto.Cipher import ARC4
+
+    obj1=ARC4.new(key)
+    cipher_text = obj1.encrypt(string)
+    return cipher_text
+
+def decripting(string,key):
+    """ This function receives an encrypted string and returns it decrypted.
+
+    Input: string, key
+    Output: cipher_text
+    """
+    import Crypto
+    from Crypto.Cipher import ARC4
+    
+    obj2 = ARC4.new(key)
+    cipher_text = obj2.decrypt(string)
+    return cipher_text
 
 # Testing functions
 #------------------------------------------------------------------
@@ -282,12 +366,15 @@ class TEST(unittest.TestCase):
         """
         import string
         import random
+
         string = ''.join(random.choice(string.letters) for _ in range(10))
+        string = 'àù1ò2è5p205,ef-.qwe,fqpojef"$%é"£&ç§£°$/L"£P£%$I%2'
+        key = string # accept user input
         img = openimage('face.png')
-        embed(string, img)
-        img.save('TEST2.png')
+        img_out = embed(encripting(string, key), img)
+        saveimage(img_out, 'TEST2.png')
         img = openimage('TEST2.png')
-        m = extract(img)
+        m = decripting(extract(img), key)
         self.assertEqual(string, m)
 
 def main():
