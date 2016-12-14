@@ -56,12 +56,12 @@ a4paper                     %a4 format
 %	AUTHOR SECTION
 %----------------------------------------------------------------------------------------
 
-\begin{minipage}{0.4\textwidth}
+\begin{minipage}{0.5\textwidth}
 \centering
 \emph{Group members:}\\ 
 Lucas Pelloni, 13-722-038\\
-Francesco Carzaniga,  \\
-Sonia Donati,  \\
+Francesco Carzaniga, 16-731-952 \\
+Sonia Donati, 16-725-400  \\
 \end{minipage}
 
 
@@ -87,15 +87,62 @@ Sonia Donati,  \\
 \end{titlepage}	
 	\section{Description of the project}
 	The goal of our project is to write a program that allows us to embed (secret) 
-	messages as invisible data into (PNG) images. In a second step we are able to 
-	embed another image by a similar approach. 
+	messages as invisible data into (PNG) images. In a second step we are going to be able to 
+	embed images, using a similar approach. 
 
+	\subsection{GitHub}
+	We used Github as our repository hosting service. Github offered us an Issue management tool to
+	split our tasks across our team members.
+	We used the GitFlow Workflow as our branching-strategy, meaning that there was a Master and 
+	Develop branch.  The finished branch "dev" was merged into the master branch at the end of the 	
+	project.
+	The link to our repository is represented here below: \newline
+	\begin{center}
+	$\url{https://github.com/francescocarzaniga/python\_image\_crypt}$
+	\end{center}	 
 	\subsection{Results}
 	 As a first step we completed the template. By doing so, we could hide a string into an image.
 Then we programmed the functions for the embedding of images into other images. At the beginning we did it for images using a colour depth of 1 bit. The hidden image was heavily altered by this process and the result was not good enough for us. Therefore we improved our functions in order to hide an image with more than one bit of depth. The hidden image with our functions is basically unchanged (very similar to the original), because we have access to a higher depth of colour.
 At the end we have done the necessary improvements: encryption, decryption and encoding.
-Respectively we have modified the graphic user interface such that the entire project would work.
-
+On parallel with this task, we modified our GUI. New buttons and new features were inserted and the template was properly connected with the User Interface. \newline
+In the next page there is a table which provides a description of how the tasks were assigned.\newpage 
+\begin{table}[]
+\centering
+\caption{Assigned tasks}
+\label{task}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Method in Template} & \textbf{Method in GUI}                                                   & Lucas & Francesco & Sonia \\ \hline
+openImage()        &                                                                 &       &           & X     \\ \hline
+saveImage()        &                                                                 &       &           & X     \\ \hline
+showImage()        &                                                                 &       &           & X     \\ \hline
+getLSB()           &                                                                 &       & X         &       \\ \hline
+setLSB()           &                                                                 &       & X         &       \\ \hline
+messagetobitlist() &                                                                 &       &           & X     \\ \hline
+bitlisttobyte()    &                                                                 & X     &           &       \\ \hline
+bytetobitlist()    &                                                                 & X     &           &       \\ \hline
+bitlisttostring()  &                                                                 &       & X         &       \\ \hline
+addmagicstring()   &                                                                 &       &           & X     \\ \hline
+checkmagic()       &                                                                 & X     &           &       \\ \hline
+writelsbtoimage()  &                                                                 &       & X         &       \\ \hline
+getlsbfromimage()  &                                                                 & X     &           &       \\ \hline
+embed()            &                                                                 &       &           & X     \\ \hline
+extract()          &                                                                 &       &           & X     \\ \hline
+findImage()        &                                                                 &       & X         &       \\ \hline
+putImage()         &                                                                 &       & X         &       \\ \hline
+encripting()       &                                                                 & X     &           &       \\ \hline
+decripting()       &                                                                 &       &           & X     \\ \hline
+                   & \begin{tabular}[c]{@{}c@{}}class: \\ popupWindow()\end{tabular} &       & X         &       \\ \hline
+                   & init()                                                          & X     &           &       \\ \hline
+                   & embed()                                                         & X     &           &       \\ \hline
+                   & extract()                                                       &       & X         &       \\ \hline
+                   & show()                                                          &       &           & X     \\ \hline
+                   & embedImage()                                                    & X     &           &       \\ \hline
+                   & buttonTouched()                                                 & X     &           &       \\ \hline
+                   & extractImage()                                                  & X     &           &       \\ \hline
+                   & storagesize()                                                   &       & X         &       \\ \hline
+\end{tabular}
+\end{table}
 	
 
 \end{document}

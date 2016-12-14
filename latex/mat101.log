@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.9.18)  13 DEC 2016 21:05
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.9.18)  14 DEC 2016 11:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -768,26 +768,38 @@ Package pdftex.def Info: ./uzhlogo.jpg used on input line 39.
 
 {/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./uzhlo
 go.jpg>]
-[2] (./mat101.aux) ) 
+Underfull \hbox (badness 10000) in paragraph at lines 94--100
+
+ []
+
+[2]
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 109.
+
+[3] (./mat101.aux) ) 
 Here is how much of TeX's memory you used:
- 6924 strings out of 493014
- 100323 string characters out of 6133351
- 174153 words of memory out of 5000000
- 10331 multiletter control sequences out of 15000+600000
- 12727 words of font info for 30 fonts, out of 8000000 for 9000
+ 6962 strings out of 493014
+ 100735 string characters out of 6133351
+ 182161 words of memory out of 5000000
+ 10356 multiletter control sequences out of 15000+600000
+ 20623 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,6n,38p,495b,231s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 38i,14n,39p,495b,357s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/cm-supe
 r/cm-super-t1.enc}</usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-sup
-er/sfbx1200.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super
-/sfcc1728.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/s
-frm1200.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfr
-m1728.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfti1
-200.pfb>
-Output written on mat101.pdf (2 pages, 296548 bytes).
+er/sfbx1000.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super
+/sfbx1200.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/s
+fcc1728.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfr
+m1000.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm1
+200.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm172
+8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfti1200.
+pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sftt1200.pf
+b>
+Output written on mat101.pdf (3 pages, 350763 bytes).
 PDF statistics:
- 33 PDF objects out of 1000 (max. 8388607)
- 22 compressed objects within 1 object stream
+ 48 PDF objects out of 1000 (max. 8388607)
+ 33 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

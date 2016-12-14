@@ -28,6 +28,19 @@ except ImportError:
 
 import template as sl
 
+class popupWindow(object):
+    def __init__(self,master):
+        top=self.top=Toplevel(master)
+        self.l=Label(top,text="Insert your key")
+        self.l.pack()
+        self.e=Entry(top)
+        self.e.pack()
+        self.b=Button(top,text='Continue',command=self.cleanup)
+        self.b.pack()
+    def cleanup(self):
+        self.value=self.e.get()
+        self.top.destroy()
+
 class MyFrame(Frame):
     def __init__(self):
         Frame.__init__(self)
@@ -58,25 +71,26 @@ class MyFrame(Frame):
             return
         img = sl.openimage(filename)
         text = self.text1.get(1.0, END + '-1c')
-        #TODO: prendere input la textarea
-        Button(root, text='Continue', command=lambda: self.buttonTouched2(text, img, root)).grid(row=3, column=1, sticky=W, pady=4)
-
-
-    def buttonTouched2(self, text, img, root):
-        img_out = sl.embed(text, img)
+        
+        self.w=popupWindow(self.master)
+        self.master.wait_window(self.w.top)
+        
         filenameout = tkFileDialog.asksaveasfilename()
         if filenameout == "":
             return
+        img_out = sl.embed(text, img, self.w.value)
         sl.saveimage(img_out, filenameout)
-        root.destroy()
     
     def extract(self):
         filename = tkFileDialog.askopenfilename()
         if filename == "":
             return
         img = sl.openimage(filename)
-        text = sl.extract(img)
-        text = base64.b64decode(text)
+        
+        self.w=popupWindow(self.master)
+        self.master.wait_window(self.w.top)
+        
+        text = sl.extract(img, self.w.value)
         if text == None:
             text = "Nothing found"
         self.text1.delete(1.0, END)
