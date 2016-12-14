@@ -353,15 +353,18 @@ class TEST(unittest.TestCase):
         import string
         import random
 
-        string = ''.join(random.choice(string.letters) for _ in range(10))
-        string = 'helloéàèéäüöüö'
-        key = string # accept user input
+#         string = ''.join(random.choice(string.letters) for _ in range(10))
+#         string = 'helloéàèéäüöüö'
+#         key = string # accept user input
         img = openimage('face.png')
-        img_out = embed(string, img, string)
-        saveimage(img_out, 'TEST2')
-        img = openimage('TEST2.png')
-        m = extract(img, string)
-        self.assertEqual(string, m)
+#         img_out = embed(string, img, string)
+#         saveimage(img_out, 'TEST2')
+#         img = openimage('TEST2.png')
+#         m = extract(img, string)
+#         self.assertEqual(string, m)
+        
+        img_targ = openimage('Beautiful-Parrot-Couple.png')
+        showimage(findImage(putImage(img, img_targ, 3), 3))
         
 def main():
     unittest.main()

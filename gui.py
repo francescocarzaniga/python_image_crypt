@@ -113,7 +113,7 @@ class MyFrame(Frame):
             return
         if imageTargetPath == "":
             return 
-        self.setImageOrigin (sl.openimage(imageOriginPath))
+        self.setImageOrigin(sl.openimage(imageOriginPath))
         self.setImageTarget(sl.openimage(imageTargetPath))
 
         root = tk.Tk()
@@ -130,7 +130,6 @@ class MyFrame(Frame):
         button.pack(side='left', padx=20, pady=10)
 
     def buttonTouched(self, var, root):
-        print var.get()
         embedImagePath = tkFileDialog.asksaveasfilename(message = "Save your image!")
         img_out = sl.putImage(self.getImageOrigin(), self.getImageTarget(), int(var.get()))
         sl.saveimage(img_out, embedImagePath)
@@ -141,12 +140,33 @@ class MyFrame(Frame):
 
         if imageToExtractPath == "":
             return
-
-        imageToExtract = sl.openimage(imageToExtractPath)
-        img_out = sl.findImage(imageToExtract, 4)
-
+        
+        self.setImageToExtract(imageToExtractPath)
+        
+        root = tk.Tk()
+        root.geometry("%dx%d+%d+%d" % (430, 80, 200, 150))
+        root.title("Select your image depth")
+        var = tk.StringVar(root)
+        # initial value
+        var.set('Select your depth')
+        choices = [1, 2, 3, 4]
+        option = tk.OptionMenu(root, var, *choices)
+        option.pack(side='left', padx=10, pady=10)
+        #COMMAND SELECT!
+        button = tk.Button(root, text="OK", command= lambda:self.buttonTouched2(var, root))
+        button.pack(side='left', padx=20, pady=10)
+        
+#         img_out = sl.findImage(imageToExtract, 4)
+# 
+#         extractedImagePath = tkFileDialog.asksaveasfilename(message = "Where do you want to save your hidden image?")
+#         sl.saveimage(img_out, extractedImagePath)
+    
+    def buttonTouched2(self, var, root):
         extractedImagePath = tkFileDialog.asksaveasfilename(message = "Where do you want to save your hidden image?")
+        img_in = sl.openimage(self.getImageToExtract())
+        img_out = sl.findImage(img_in, int(var.get()))
         sl.saveimage(img_out, extractedImagePath)
+        root.destroy()
 
     def storagesize(self, image):
         return int(float(2)/3 * (image.size[0] * image.size[1] * 3 // 8 - len(sl.addmagicstring(""))))
@@ -162,6 +182,13 @@ class MyFrame(Frame):
 
     def getImageTarget (self):
         return self.imageTarget
+    
+    def setImageToExtract(self, imageToExtract):
+        self.imageToExtract = imageToExtract 
+        
+    def getImageToExtract(self):
+        return self.imageToExtract
+
 
 def main():
     MyFrame().mainloop()
