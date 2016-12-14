@@ -1,0 +1,148 @@
+\documentclass[
+parskip=full,               %ganze leere linie vor neuen absatz <false(einzug),half halbe linie abstand>
+12pt,                       %schriftgrösse <10pt, 11pt, 12pt>
+twoside,                    %modus einseitige seiten <twoside>
+a4paper                     %a4 format
+]{article}           
+
+\usepackage[]{acronym}		% printonlyused: muss am Schluss noch eingefügt werden
+\usepackage{graphicx}		%Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+\usepackage[ngerman, english]{babel}	%Deutsche Silben Trennung	
+\usepackage[T1]{fontenc}    %Silbentrennung	
+\usepackage{float}  		 %bildposition erzwingen
+\usepackage[toc,page]{appendix}   %erweiterte anhang umgebung
+\usepackage{a4wide}
+\usepackage[margin=10pt,font=small,labelfont=bf,format=plain]{caption}	%Package für kleinere Schrift unter den Bildern
+\usepackage{apacite}
+\usepackage{xcolor} % Required for specifying custom colors
+\usepackage{fix-cm} % Allows increasing the font size of specific fonts beyond LaTeX default specifications
+\usepackage{amsmath} %math package for formulas, etc. 
+\usepackage[utf8]{inputenc}
+\usepackage{pdfpages}
+\setlength{\parindent}{0em}
+\setlength{\parskip}{0.7em}
+
+
+
+\begin{document}
+	
+	\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+ 
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+\begin{center}
+\includegraphics[scale = 1]{./uzhlogo}
+\end{center} 
+\textsc{\LARGE University Of Zürich}\\[1.5cm] % Name of your university/college
+\Large MAT 101 - Programming\\
+\Large Group Project\\
+\Large Fall semester 2016 \\[0.5cm]
+\large Submission date: 14.12.2016 \\[0.5cm] % Minor heading such as course title
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Embedding Secret Messages Into Image Files }\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{minipage}{0.5\textwidth}
+\centering
+\emph{Group members:}\\ 
+Lucas Pelloni, 13-722-038\\
+Francesco Carzaniga, 16-731-952 \\
+Sonia Donati, 16-725-400  \\
+\end{minipage}
+
+
+% If you don't want a supervisor, uncomment the two lines below and remove the section above
+%\Large \emph{Author:}\\
+%John \textsc{Smith}\\[3cm] % Your name
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+%{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
+ 
+%----------------------------------------------------------------------------------------
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}	
+	\section{Description of the project}
+	The goal of our project is to write a program that allows us to embed (secret) 
+	messages as invisible data into (PNG) images. In a second step we are going to be able to 
+	embed images, using a similar approach. 
+
+	\subsection{GitHub}
+	We used Github as our repository hosting service. Github offered us an Issue management tool to
+	split our tasks across our team members.
+	We used the GitFlow Workflow as our branching-strategy, meaning that there was a Master and 
+	Develop branch.  The finished branch "dev" was merged into the master branch at the end of the 	
+	project.
+	The link to our repository is represented here below: \newline
+	\begin{center}
+	$\url{https://github.com/francescocarzaniga/python\_image\_crypt}$
+	\end{center}	 
+	\subsection{Results}
+	 As a first step we completed the template. By doing so, we could hide a string into an image.
+Then we programmed the functions for the embedding of images into other images. At the beginning we did it for images using a colour depth of 1 bit. The hidden image was heavily altered by this process and the result was not good enough for us. Therefore we improved our functions in order to hide an image with more than one bit of depth. The hidden image with our functions is basically unchanged (very similar to the original), because we have access to a higher depth of colour.
+At the end we have done the necessary improvements: encryption, decryption and encoding.
+On parallel with this task, we modified our GUI. New buttons and new features were inserted and the template was properly connected with the User Interface. \newline
+In the next page there is a table which provides a description of how the tasks were assigned.\newpage 
+\begin{table}[]
+\centering
+\caption{Assigned tasks}
+\label{task}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Method in Template} & \textbf{Method in GUI}                                                   & Lucas & Francesco & Sonia \\ \hline
+openImage()        &                                                                 &       &           & X     \\ \hline
+saveImage()        &                                                                 &       &           & X     \\ \hline
+showImage()        &                                                                 &       &           & X     \\ \hline
+getLSB()           &                                                                 &       & X         &       \\ \hline
+setLSB()           &                                                                 &       & X         &       \\ \hline
+messagetobitlist() &                                                                 &       &           & X     \\ \hline
+bitlisttobyte()    &                                                                 & X     &           &       \\ \hline
+bytetobitlist()    &                                                                 & X     &           &       \\ \hline
+bitlisttostring()  &                                                                 &       & X         &       \\ \hline
+addmagicstring()   &                                                                 &       &           & X     \\ \hline
+checkmagic()       &                                                                 & X     &           &       \\ \hline
+writelsbtoimage()  &                                                                 &       & X         &       \\ \hline
+getlsbfromimage()  &                                                                 & X     &           &       \\ \hline
+embed()            &                                                                 &       &           & X     \\ \hline
+extract()          &                                                                 &       &           & X     \\ \hline
+findImage()        &                                                                 &       & X         &       \\ \hline
+putImage()         &                                                                 &       & X         &       \\ \hline
+encripting()       &                                                                 & X     &           &       \\ \hline
+decripting()       &                                                                 &       &           & X     \\ \hline
+                   & \begin{tabular}[c]{@{}c@{}}class: \\ popupWindow()\end{tabular} &       & X         &       \\ \hline
+                   & init()                                                          & X     &           &       \\ \hline
+                   & embed()                                                         & X     &           &       \\ \hline
+                   & extract()                                                       &       & X         &       \\ \hline
+                   & show()                                                          &       &           & X     \\ \hline
+                   & embedImage()                                                    & X     &           &       \\ \hline
+                   & buttonTouched()                                                 & X     &           &       \\ \hline
+                   & extractImage()                                                  & X     &           &       \\ \hline
+                   & storagesize()                                                   &       & X         &       \\ \hline
+\end{tabular}
+\end{table}
+	
+
+\end{document}

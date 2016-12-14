@@ -183,10 +183,8 @@ def addmagicstring(message):
         >>> addmagicstring('Hello')
         'MAGICSTRINGSTARTHelloMAGICSTRINGEND'
     """
-    #specialString = "יום טוב"
-    #specialStringEnd = "לילה טוב"
-    specialString = "testtestbegin"
-    specialStringEnd = "testtestend"
+    specialString = "thisisbegin"
+    specialStringEnd = "thisisend"
 
     message = specialString + message + specialStringEnd
     return message
@@ -200,8 +198,8 @@ def checkmagic(string):
             None (if the string does not contain magicstrings)
     """
     
-    MAGICSTART = "testtestbegin"
-    MAGICEND   = "testtestend"
+    MAGICSTART = "thisisbegin"
+    MAGICEND   = "thisisend"
 
     result = re.search(MAGICSTART + '([\s\S.]*)' + MAGICEND, string)
     if result:
@@ -221,7 +219,7 @@ def writelsbtoimage(image, bl):
     import random
     
     img_array = np.array(image)
-    ins_point = 0 # random.randrange(0, img_array.size-len(bl), 8)
+    ins_point = 0 
     img_array.ravel()[ins_point:(ins_point+len(bl))] = setLSB(img_array.ravel()[ins_point:(ins_point+len(bl))], bl, 1)
     image_output = Image.fromarray(img_array)
     
@@ -285,6 +283,7 @@ def extract(image, key):
 
 def findImage(image, depth):
     """ This function finds the hiddenimage
+
     Input: image, depth (depth of the target image)
     Output: img_new (target image)
     """
@@ -363,8 +362,7 @@ class TEST(unittest.TestCase):
         img = openimage('TEST2.png')
         m = extract(img, string)
         self.assertEqual(string, m)
-        #showimage(findimage(putimage(img, img_or, 4), 4))
-
+        
 def main():
     unittest.main()
 

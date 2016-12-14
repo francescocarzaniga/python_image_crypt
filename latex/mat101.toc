@@ -1,0 +1,11 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Aufgetauchte Probleme}{3}
+\contentsline {subsection}{\numberline {1.1}Technische}{3}
+\contentsline {subsection}{\numberline {1.2}Organisatorische}{3}
+\contentsline {subsection}{\numberline {1.3}Fachliche}{3}
+\contentsline {section}{\numberline {2}Lesson Learned}{3}
+\contentsline {section}{\numberline {3}Vor- und Nachteile einer solchen Aufgabe}{4}
+\contentsline {subsection}{\numberline {3.1}Vorteile}{4}
+\contentsline {subsection}{\numberline {3.2}Nachteile}{4}
+\contentsline {section}{\numberline {4}Verbesserungsvorschl\IeC {\"a}ge}{4}
+\contentsline {section}{\numberline {5}Weitere Anmerkungen}{4}
