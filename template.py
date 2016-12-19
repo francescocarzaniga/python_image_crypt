@@ -130,7 +130,6 @@ def bytetobitlist(byte):
             [0,0,0,0,0,1,0,0]    
     """
     byte = bin(byte)[2:]
-    str(byte)
     bits = []
     for i in byte: 
         bits.append(i)
