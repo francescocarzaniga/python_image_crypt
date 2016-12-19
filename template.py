@@ -49,11 +49,11 @@ def showimage(image):
 def getLSB(byte, depth):
     """ return the least {depth} significant bit(s) of the argument
 
-    Input: byte
+    Input: byte, depth
     Output: lsb
 
         Example: 
-            >>> getLSB(0b01010101)
+            >>> getLSB(0b01010101,1)
             1
     """
     
@@ -64,11 +64,11 @@ def setLSB(byte, bit, depth):
     """ return byte modified such that the least {depth} significant
         bit(s) have the value given by bit.
 
-    Input: byte, bit(new bit)
+    Input: byte, bit(new bit), depth
     Output: new_byte (old byte with the lsb modified with new bit)
 
         Example: 
-            >>> setLSB(0b01010101,0)
+            >>> setLSB(0b01010101,0b0,1)
             0b01010100
     """
     
@@ -244,7 +244,7 @@ def getlsbfromimage(image):
 def embed(message, image, key):
     """ Embed the string in the image as a secret message.
 
-    Input: message, image
+    Input: message, image, key 
     Output: image with hidden string
     """
     # add some string at the beginning and end of the message
@@ -264,7 +264,7 @@ def extract(image, key):
     """ check if the given image contains any hidden message
         and return the message as a string if there is any.
 
-    Input: image
+    Input: image, key
     Output: string (hidden string)
             "Nothing found" (if the image does not contain any hidden message)
     """
@@ -353,15 +353,15 @@ class TEST(unittest.TestCase):
         import string
         import random
 
-#         string = ''.join(random.choice(string.letters) for _ in range(10))
-#         string = 'helloéàèéäüöüö'
-#         key = string # accept user input
+        string = ''.join(random.choice(string.letters) for _ in range(10))
+        string = 'helloéàèéäüöüö'
+        key = string # accept user input
         img = openimage('face.png')
-#         img_out = embed(string, img, string)
-#         saveimage(img_out, 'TEST2')
-#         img = openimage('TEST2.png')
-#         m = extract(img, string)
-#         self.assertEqual(string, m)
+        img_out = embed(string, img, string)
+        saveimage(img_out, 'TEST2')
+        img = openimage('TEST2.png')
+        m = extract(img, string)
+        self.assertEqual(string, m)
         
         img_targ = openimage('Beautiful-Parrot-Couple.png')
         showimage(findImage(putImage(img, img_targ, 3), 3))
